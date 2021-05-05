@@ -2,7 +2,7 @@ import random
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-class User:
+class User: 
 
 	def __init__(self, win_score=0, loss_score=0, users_config)
 

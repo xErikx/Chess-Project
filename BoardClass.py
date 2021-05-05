@@ -1,6 +1,6 @@
 import Figures
 
-class Board:
+class Board: 
 
 	def __init__(self, user):
 
