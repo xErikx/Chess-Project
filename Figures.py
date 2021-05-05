@@ -132,29 +132,117 @@ class Queen(Figure):
 		self.figure_color = figure_color
 
 	def possible_queen_moves(self):
-		counter = 1
 
-		while -1 < self.position[0] < 8 and -1 < self.position[1] < 8:
+		# if queen is in the left down corner
+		if self.position[0] == 7 and self.position[1] == 0:
 			# forward move
-			self.poss_moves.append([self.position[0] - self.counter, self.position[1]])
+			for count in range(1, self.position[0] + 1):
+				self.poss_moves.append([self.position[0] - count, self.position[1]])
+			# right move and right diagonally forward
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0], self.position[1] + count])
+				self.poss_moves.append([self.position[0] - count, self.position[1] + count])
+		# if queen is in the right down corner
+		elif self.position[0] == 7 and self.position[1] == 7:
+			# forward move
+			for count in range(1, self.position[0] + 1):
+				self.poss_moves.append([self.position[0] - count, self.position[1]])
+			# left move and left diagonally forward
+			for count in range(1, self.position[1] + 1):
+				self.poss_moves.append([self.position[0], self.position[1] - count])
+				self.poss_moves.append([self.position[0] - count, self.position[1] - count])
+		# if queen is in the left top corner
+		elif self.position[0] == 0 and self.position[1] == 0:
 			# backwards move
-			self.poss_moves.append([self.position[0] + self.counter, self.position[1]])
-			# right move
-			self.poss_moves.append([self.position[0], self.position[1] + self.counter])
-			# left move
-			self.poss_moves.append([self.position[0], self.position[1] - self.counter])
-			# diagonal left forward
-			self.poss_moves.append([self.position[0] - self.counter, self.position[1] - self.counter])
-			# diagonal right forward
-			self.poss_moves.append([self.position[0] - self.counter, self.position[1] + self.counter])
-			# diagonal left backwards
-			self.poss_moves.append([self.position[0] + self.counter, self.position[1] - self.counter])
-			# diagonal right backwards
-			self.poss_moves.append([self.position[0] + self.counter, self.position[1] + self.counter])
-			self.counter += 1
-
-		self.counter = 1
+			for count in range(1, 8 - self.position[0]):
+				self.poss_moves.append([self.position[0] + count, self.position[1]])
+			# right move and right diagonally backwards
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0], self.position[1] + count])
+				self.poss_moves.append([self.position[0] + count, self.position[1] + count])
+		# if queen is in the right top corner
+		elif self.position[0] == 0 and self.position[1] == 7:
+			# backwards move
+			for count in range(1, 8 - self.position[0]):
+				self.poss_moves.append([self.position[0] + count, self.position[1]])
+			# left move and left diagonally backwards
+			for count in range(1, self.position[1] + 1)
+				self.poss_moves.append([self.position[0], self.position[1] - count])
+				self.poss_moves.append([self.position[0] + count, self.position[1] - count])
+		# if queen is in the first column on the board
+		elif 0 < self.position[0] < 7 and self.position[1] == 0:
+			# right move, right diagonally forward and right diagonally backwards
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0], self.position[1] + count])
+				self.poss_moves.append([self.position[0] - count, self.position[1] + count])
+				self.poss_moves.append([self.position[0] + count, self.position[1] + count])
+			# forward move
+			for count in range(1, self.position[0] + 1):
+				self.poss_moves.append([self.position[0] - count, self.position[1]])
+			# backwards move
+			for count in range(1, 8 - self.position[0]):
+				self.poss_moves.append([self.position[0] + count, self.position[1]])
+		# if queen is in the last column on the board
+		elif 0 < self.position[0] < 7 and self.position[1] == 7:
+			# forward move
+			for count in range(1, self.position[0] + 1):
+				self.poss_moves.append([self.position[0] - count, self.position[1]])
+			# backwards move
+			for count in range(1, 8 - self.position[0]):
+				self.poss_moves.append([self.position[0] + count, self.position[1]])
+			# left move, left diagonally forward and left diagonally backwards
+			for count in range(1, self.position[1] + 1)
+				self.poss_moves.append([self.position[0], self.position[1] - count])
+				self.poss_moves.append([self.position[0] - count, self.position[1] - count])
+				self.poss_moves.append([self.position[0] + count, self.position[1] - count])
+		# if the queen is in the first line of the board
+		elif self.position[0] == 7 and 0 < self.position[1] < 7:
+			# forward move
+			for count in range(1, self.position[0] + 1):
+				self.poss_moves.append([self.position[0] - count, self.position[1]])
+			# left move and left diagonally forward
+			for count in range(1, self.position[1] + 1):
+				self.poss_moves.append([self.position[0], self.position[1] - count])
+				self.poss_moves.append([self.position[0] - count, self.position[1] - count])
+			# right move and right diagonally forward
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0], self.position[1] + count])
+				self.poss_moves.append([self.position[0] - count, self.position[1] + count])
+		# if the queen is in the last line(top line) of the board
+		elif self.position[0] == 0 and 0 < self.position[1] < 7:
+			# backwards move
+			for count in range(1, 8 - self.position[0]):
+				self.poss_moves.append([self.position[0] + count, self.position[1]])
+			# left move and left diagonally backwards
+			for count in range(1, self.position[1] + 1)
+				self.poss_moves.append([self.position[0], self.position[1] - count])
+				self.poss_moves.append([self.position[0] + count, self.position[1] - count])
+			# right move and right diagonally backwards
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0], self.position[1] + count])
+				self.poss_moves.append([self.position[0] + count, self.position[1] + count])
+		else:
+			# right move, right diagonally forward and right diagonally backwards
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0], self.position[1] + count])
+				self.poss_moves.append([self.position[0] - count, self.position[1] + count])
+				self.poss_moves.append([self.position[0] + count, self.position[1] + count])
+			# forward move
+			for count in range(1, self.position[0] + 1):
+				self.poss_moves.append([self.position[0] - count, self.position[1]])
+			# backwards move
+			for count in range(1, 8 - self.position[0]):
+				self.poss_moves.append([self.position[0] + count, self.position[1]])
+			# left move, left diagonally forward and left diagonally backwards
+			for count in range(1, self.position[1] + 1)
+				self.poss_moves.append([self.position[0], self.position[1] - count])
+				self.poss_moves.append([self.position[0] - count, self.position[1] - count])
+				self.poss_moves.append([self.position[0] + count, self.position[1] - count])
+				
+			
+		# possible moves are the same as possible attacks
 		self.poss_moves = self.poss_attacks
+
 
 class Soldier(Figure):
 
@@ -324,7 +412,7 @@ class Horse(Figure):
 			self.poss_moves.append([self.position[0] + 1, self.position[1] - 2])
 		# if horse is on the first line of the board
 		elif self.position[0] == 7:
-			if 1 < self.position[1] < 6:
+			if self.position[0] == 7 and 1 < self.position[1] < 6:
 				# forward left move
 				self.poss_moves.append([self.position[0] - 2, self.position[1] - 1])
 				# forward right move
@@ -334,10 +422,99 @@ class Horse(Figure):
 				# right forward move
 				self.poss_moves.append([self.position[0] - 1, self.position[1] + 2])
 			else:
-				# forward left move
-				self.poss_moves.append([self.position[0] - 2, self.position[1] - 1])
+				if self.position[0] == 7 and self.position[1] == 1:
+					# forward right move
+					self.poss_moves.append([self.position[0] - 2, self.position[1] + 1])
+					# right forward move
+					self.poss_moves.append([self.position[0] - 1, self.position[1] + 2])
+					# forward left move
+					self.poss_moves.append([self.position[0] - 2, self.position[1] - 1])
+				elif self.position[0] == 7 and self.position[1] == 6:
+					# forward right move
+					self.poss_moves.append([self.position[0] - 2, self.position[1] + 1])
+					# forward left move
+					self.poss_moves.append([self.position[0] - 2, self.position[1] - 1])
+					# left forward move
+					self.poss_moves.append([self.position[0] - 1, self.position[1] - 2])
+		# if horse is on the last(top) line of the board
+		elif self.position[0] == 0:
+			if self.position[0] == 0 and 1 < self.position[1] < 6:
+				# backwards right move
+				self.poss_moves.append([self.position[0] + 2, self.position[1] + 1])
+				# backwards left move
+				self.poss_moves.append([self.position[0] + 2, self.position[1] - 1])
+				# right backwards move
+				self.poss_moves.append([self.position[0] + 1, self.position[1] + 2])
+				# left backwards move
+				self.poss_moves.append([self.position[0] + 1, self.position[1] - 2])
+			else:
+				if self.position[0] == 0 and self.position[1] == 1:
+					# backwards right move
+					self.poss_moves.append([self.position[0] + 2, self.position[1] + 1])
+					# backwards left move
+					self.poss_moves.append([self.position[0] + 2, self.position[1] - 1])
+					# right backwards move
+					self.poss_moves.append([self.position[0] + 1, self.position[1] + 2])
+				elif self.position[0] == 0 and self.position[1] == 6:
+					# backwards right move
+					self.poss_moves.append([self.position[0] + 2, self.position[1] + 1])
+					# backwards left move
+					self.poss_moves.append([self.position[0] + 2, self.position[1] - 1])
+					# left backwards move
+					self.poss_moves.append([self.position[0] + 1, self.position[1] - 2])
+		# if horse is on the first column of the board
+		elif self.position[1] == 0: 
+			if 1 < self.position[0] < 6 and self.position[1] == 0:
 				# forward right move
 				self.poss_moves.append([self.position[0] - 2, self.position[1] + 1])
+				# right forward move
+				self.poss_moves.append([self.position[0] - 1, self.position[1] + 2])
+				# backwards right move
+				self.poss_moves.append([self.position[0] + 2, self.position[1] + 1])
+				# right backwards move
+				self.poss_moves.append([self.position[0] + 1, self.position[1] + 2])
+			else:
+				if self.position[0] == 6 and self.position[1] == 0:
+					# right backwards move
+					self.poss_moves.append([self.position[0] + 1, self.position[1] + 2])
+					# right forward move
+					self.poss_moves.append([self.position[0] - 1, self.position[1] + 2])
+					# forward right move
+					self.poss_moves.append([self.position[0] - 2, self.position[1] + 1])
+				elif self.position[0] == 1 and self.position[1] == 0:
+					# right backwards move
+					self.poss_moves.append([self.position[0] + 1, self.position[1] + 2])
+					# right forward move
+					self.poss_moves.append([self.position[0] - 1, self.position[1] + 2])
+					# backwards right move
+					self.poss_moves.append([self.position[0] + 2, self.position[1] + 1])
+		# if horse is on the last column of the board
+		elif self.position[1] == 7:
+			if 1 < self.position[0] < 6 and self.position[1] == 7:
+				# left forward move
+				self.poss_moves.append([self.position[0] - 1, self.position[1] - 2])
+				# left backwards move
+				self.poss_moves.append([self.position[0] + 1, self.position[1] - 2])
+				# forward left move
+				self.poss_moves.append([self.position[0] - 2, self.position[1] - 1])
+				# backwards left move
+				self.poss_moves.append([self.position[0] + 2, self.position[1] - 1])
+			else:
+				if self.position[0] == 1 and self.position[1] == 7:
+					# right backwards move
+					self.poss_moves.append([self.position[0] + 1, self.position[1] + 2])
+					# right forward move
+					self.poss_moves.append([self.position[0] - 1, self.position[1] + 2])
+					# backwards left move
+					self.poss_moves.append([self.position[0] + 2, self.position[1] - 1])
+				elif self.position[0] == 6 and self.position[1] == 7:
+					# left backwards move
+					self.poss_moves.append([self.position[0] + 1, self.position[1] - 2])
+					# left forward move
+					self.poss_moves.append([self.position[0] - 1, self.position[1] - 2])
+					# forward left move
+					self.poss_moves.append([self.position[0] - 2, self.position[1] - 1])
+
 
 
 
@@ -369,19 +546,71 @@ class Bishop(Figure):
 
 	def possible_bishop_moves(self):
 
-		self.counter = 1
+		# if bishop is in the left down corner
+		if self.position[0] == 7 and self.position[1] == 0:
+			# right diagonally forward
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0] - count, self.position[1] + count])
+		# if bishop is in the right down corner
+		elif self.position[0] == 7 and self.position[1] == 7:
+			# left diagonally forward
+			for count in range(1, self.position[1] + 1):
+				self.poss_moves.append([self.position[0] - count, self.position[1] - count])
+		# if bishop is in the top left corner
+		elif self.position[0] == 0 and self.position[1] == 0:
+			# right diagonally backwards
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0] + count, self.position[1] + count])
+		# if bishop is in the top right corner
+		elif self.position[0] == 0 and self.position[1] == 7:
+			# left diagonally backwards
+			for count in range(1, self.position[1] + 1):
+				self.poss_moves.append([self.position[0] + count, self.position[1] - count])
+		# if bishop is on the first line of the board
+		elif self.position[0] == 7 and 0 < self.position[1] < 7:
+			# right diagonally forward
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0] - count, self.position[1] + count])
+			# left diagonally forward
+			for count in range(1, self.position[1] + 1):
+				self.poss_moves.append([self.position[0] - count, self.position[1] - count])
+		# if bishop is on the last line(top) of the board
+		elif self.position[0] == 0 and 0 < self.position[1] < 7::
+			# right diagonally backwards
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0] + count, self.position[1] + count])
+			# left diagonally backwards
+			for count in range(1, self.position[1] + 1):
+				self.poss_moves.append([self.position[0] + count, self.position[1] - count])
+		# if bishop is on the first column of the board
+		elif 0 < self.position[0] < 7 and self.position[1] == 0:
+			# right diagonally forward
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0] - count, self.position[1] + count])
+			# right diagonally backwards
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0] + count, self.position[1] + count])
+		# if bishop is on the last column of the board
+		elif 0 < self.position[0] < 7 and self.position[1] == 7:
+			# left diagonally forward
+			for count in range(1, self.position[1] + 1):
+				self.poss_moves.append([self.position[0] - count, self.position[1] - count])
+			# left diagonally backwards
+			for count in range(1, self.position[1] + 1):
+				self.poss_moves.append([self.position[0] + count, self.position[1] - count])
+		else:
+			# right diagonally forward
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0] - count, self.position[1] + count])
+			# left diagonally forward
+			for count in range(1, self.position[1] + 1):
+				self.poss_moves.append([self.position[0] - count, self.position[1] - count])
+			# right diagonally backwards
+			for count in range(1, 8 - self.position[1]):
+				self.poss_moves.append([self.position[0] + count, self.position[1] + count])
+			# left diagonally backwards
+			for count in range(1, self.position[1] + 1):
+				self.poss_moves.append([self.position[0] + count, self.position[1] - count])
 
-		while -1 < self.position[0] < 8 and -1 < self.position[1] < 8:
-
-			# diagonal left forward
-			self.poss_moves.append([self.position[0] - self.counter, self.position[1] - self.counter])
-			# diagonal right forward
-			self.poss_moves.append([self.position[0] - self.counter, self.position[1] + self.counter])
-			# diagonal left backwards
-			self.poss_moves.append([self.position[0] + self.counter, self.position[1] - self.counter])
-			# diagonal right backwards
-			self.poss_moves.append([self.position[0] + self.counter, self.position[1] + self.counter])
-			self.counter += 1
-
-		self.counter = 1
+		# moves are the same as attacks
 		self.poss_moves = self.poss_attacks
