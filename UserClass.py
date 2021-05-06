@@ -95,3 +95,19 @@ class User:
 		print(f"Mail sended to {self.email_address}")
 
 		self.server.close()
+
+
+	# user moving his figures from coordinates:
+	def user_move_from(self):
+		from_list = []
+		first = input("Which figure: ")
+		second = input("Which figure: ")
+		from_list.append(first, second)
+
+		return from_list
+
+	# user moving his figures to coordinates
+	def user_move_to(self):
+		to_list = []
+		first = input("To Where: ")
+		second = input("To Where: ")
