@@ -42,22 +42,40 @@ class Board:
 		Self.board[0][0], self.board[0][-1] = Tower, Tower
 		Self.board[-1][0], self.board[-1][-1] = Tower, Tower
 
+
 	# giving colors to figures(objects) on board
 	def board_initializing(self):
 		# initializing blue(black) figures
 		for figures in self.board[0]:
-			figures = f"\033[1;32;40m {Figures}"
+			figures = f"\033[1;34;40m {Figures}"
 		for figures in self.board[1]:
-			figures = f"\033[1;32;40m {Figures}"
+			figures = f"\033[1;34;40m {Figures}"
 
 		# initializing white figures
 		for figures in self.board[7]:
-			figures = f"\037[1;32;40m {Figures}"
+			figures = f"\033[1;37;40m {Figures}"
 		for figures in self.board[6]:
-			figures = f"\037[1;32;40m {Figures}"
+			figures = f"\033[1;37;40m {Figures}"
 
 
 
 	def board_move_figure(self, self.figure_from, self.figure_to):
-		self.figure_from = self.user.user_move_from()
-		self.figure_to = self.user.user_move_to()
+		
+		while True:
+
+			# getting our possible moves for figure
+			self.board[self.figure_from[0]][self.figure_from[1]].possible_moves
+
+			# checking if the coordinates figure_to match with possible move cells for figure
+			for cells in self.board[self.figure_from[0]][self.figure_from[1]].poss_moves:
+
+				# simple move for figure in case if the go to cell is empty 
+				if self.board[self.figure_to[0]][self.figure_to[1]] == self.board[cells[0]][cells[1]] and self.board[cells[0]][cells[1]] == None:
+					# moving the figure to given position 
+					self.board[self.figure_to[0]][self.figure_to[1]] = self.board[self.figure_from[0]][self.figure_from[1]]
+					# making the inital coordinates None as figure moved from there
+					self.board[self.figure_from[0]][self.figure_from[1]] = None
+					# clearing the possible_moves list for figure
+					self.board[self.figure_to[0]][self.figure_to[1]].poss_moves = []
+					# clearing the possible_attacks list for figure
+					self.board[self.figure_to[0]][self.figure_to[1]].poss_attacks = []

@@ -102,7 +102,8 @@ class User:
 		from_list = []
 		first = input("Which figure: ")
 		second = input("Which figure: ")
-		from_list.append(first, second)
+		from_list.append(first)
+		from_list.append(second)
 
 		return from_list
 
@@ -111,3 +112,7 @@ class User:
 		to_list = []
 		first = input("To Where: ")
 		second = input("To Where: ")
+		to_list.append(first)
+		to_list.append(second)
+
+		return to_list
