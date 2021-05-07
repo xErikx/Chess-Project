@@ -1,7 +1,7 @@
 class Figure:
 
 	def __init__(self, board):
-
+ 
 		self.board = board
 		# attribute for all possible moves on deck for figure
 		self.poss_moves = [] 

@@ -1,6 +1,6 @@
 from figures import King, Queen, Soldier, Tower, Horse, Bishop
 
-class Board:
+class Board: 
 
 	def __init__(self, user):
 
