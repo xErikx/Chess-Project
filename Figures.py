@@ -6,9 +6,9 @@ class Figure:
 		# attribute for all possible moves on deck for figure
 		self.poss_moves = [[], [], [], [], [], [], ,[], []] 
 		# attribute for all possible attack cells for figure on deck
-		self.poss_attacks = []
+		self.poss_attacks = [[], []]
 		# attribute for figures position
-		self.position = [[], []]
+		self.position = []
 	
 	
 class King(Figure):
