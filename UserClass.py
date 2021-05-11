@@ -116,3 +116,13 @@ class User:
 		to_list.append(second)
 
 		return to_list
+
+	# checking the status for the figure
+	# if it is false, we delete it from the list
+	def user_figure_check(self):
+
+		for figure in self.user_figures:
+			if figure.status:
+				continue
+			else:
+				del figure

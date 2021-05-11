@@ -1,4 +1,4 @@
-from figures import King, Queen, Soldier, Tower, Horse, Bishop
+from Figures import King, Queen, Soldier, Tower, Horse, Bishop
 
 class Board: 
 
@@ -18,17 +18,17 @@ class Board:
 	# placing the figures on the board function
 	def figures_placing(self):
 		# placing soldiers
-		for figure in self.board[6]:
-			figure = Soldier
+		for figure in range(0, 8):
+			self.board[6][figure] = Soldier("white")
 
-		for figure in self.board[1]:
-			figure = Soldier
+		for figure in range(0, 8):
+			self.board[1][figure] = Soldier("black")
 
 		# placing Kings
-		self.board[0][4], self.board[-1][3] = King("black"), King("white")
+		self.board[0][3], self.board[7][4] = King("black"), King("white")
 
 		# placing Queens
-		self.board[0][4], self.board[-1][3] = Queen("black"), Queen("white")
+		self.board[0][4], self.board[7][3] = Queen("black"), Queen("white")
 
 		# placing Bishops
 		self.board[0][2], self.board[0][-3] = Bishop("black"), Bishop("white")
@@ -59,13 +59,13 @@ class Board:
 
 
 
-	def board_move_figure(self, self.figure_from, self.figure_to):
+	def board_move_figure(self, figure_from, figure_to):
 
 		# saving figure_from coordinate object as variable for easy use 
-		self.figure_object = self.board[self.figure_from[0]][self.figure_from[1]]
+		self.figure_object = self.board[figure_from[0]][figure_from[1]]
 
 		# giving the position for further analysis of avaiable cells for move
-		self.figure_object.position = self.figure_from
+		self.figure_object.position = figure_from
 
 		# status variable for status of the True or False condition
 		# in case if the possible move is in or out of poss_moves list
@@ -82,12 +82,12 @@ class Board:
 
 			self.loop_must_break = False
 
-			# checking if the coordinates figure_to match with possible move cells for figure
+			# checking if the figures coordinates match with possible move cells for figure
 			for direction_list in self.figure_object.poss_moves:
 
 				# looking for exact direction of the move
 				for coordinates in direction_list:
-					if self.figure_to == coordinates:
+					if figure_to == coordinates:
 
 						# returning True condition
 						self.status = True
@@ -115,33 +115,56 @@ class Board:
 			if self.status:
 
 				# saving move to index for checking all cells before the move to position
-				self.move_index = self.direction_check_list.index(self.figure_to)
+				self.move_index = self.direction_check_list.index(figure_to)
 
 				# cells status
 				self.cell_status = True
 
+				# second status in case if there is a figure on the final destination
+				self.secondary_status = None
+
 				# checking the cells before the last move position
-				for cell in range(self.move_index + 1):
+				for cell in range(0, self.move_index):
 
 					main_cell = self.direction_check_list[cell]
 
-					if self.board[main_cell[0], main_cell[1]] == None:
+					# checking if all the cells before the final destination
+					# are empty, if so, move goes on
+					if self.board[main_cell[0]][main_cell[1]] == None and self.board[figure_to[0]][figure_to[1]] == None:
+						continue
+
+					# in case if all cells before the final are empty
+					# and the final destination cell is not empty(is another figure object)
+					elif self.board[main_cell[0]][main_cell[1]] == None and self.board[figure_to[0]][figure_to[1]] != None:
+						self.secondary_status = True
 						continue
 
 					else:
 						self.cell_status = False
+						self.secondary_status  = False
 						
 						break
 
-				if self.cell_status:
-					self.board[self.figure_from[0]][self.figure_from[1]] = self.board[self.figure_to[0]][self.figure_to[1]]
-					self.board[self.figure_from[0]][self.figure_from[1]] = None
-					self.board[self.figure_to[0]][self.figure_to[1]].poss_moves = [[], [], [], [], [], [], ,[], []] 
-					self.board[self.figure_to[0]][self.figure_to[1]].poss_attacks = [[], []]
+				if self.cell_status and self.secondary_status == None:
+					self.board[figure_to[0]][figure_to[1]] = self.board[figure_from[0]][figure_from[1]]
+					self.board[figure_from[0]][figure_from[1]] = None
+					self.board[figure_to[0]][figure_to[1]].poss_moves = [[], [], [], [], [], [], [], []] 
+					self.board[figure_to[0]][figure_to[1]].poss_attacks = [[], []]
+				elif self.cell_status and self.secondary_status:
+					# checking colors
+					if self.board[figure_to[0]][figure_to[1]].color != self.figure_object.color:
+						self.board[figure_to[0]][figure_to[1]].status = False
+						self.board[figure_to[0]][figure_to[1]] = self.board[figure_from[0]][figure_from[1]]
+						self.board[figure_from[0]][figure_from[1]] = None
+						self.board[figure_to[0]][figure_to[1]].poss_moves = [[], [], [], [], [], [], [], []] 
+						self.board[figure_to[0]][figure_to[1]].poss_attacks = [[], []]
+					else:
+						print("Invalid choice, your figure is on your way")
 				else:
 					print("Invalid choice, there is a figure on your way")
 
 				break
+			# in case if we had False status and there is no such coordinates for figure to move to
 			else:
 				print("Wrong direction, please enter a valid cell for move")
 				break

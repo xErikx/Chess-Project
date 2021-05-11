@@ -1,15 +1,17 @@
 class Figure:
 
-	def __init__(self, figure_color):
- 		self.figure_color = figure_color
-	
+	def __init__(self, figure_color, figure_status=True):
+		self.figure_color = figure_color
 		# attribute for all possible moves on deck for figure
-		self.poss_moves = [[], [], [], [], [], [], ,[], []] 
+		self.poss_moves = [[], [], [], [], [], [], [], []]
 		# attribute for all possible attack cells for figure on deck
 		self.poss_attacks = [[], []]
 		# attribute for figures position
 		self.position = []
-	
+		# attribute for figure status(alive/dead)
+		self.figure_status = figure_status
+
+
 	
 class King(Figure):
 
@@ -73,7 +75,7 @@ class Queen(Figure):
 			if self.position[1] - count > -1:
 				self.poss_moves[2].append([self.position[0], self.position[1] - count])
 			# checking right cells
-			if position[1] + count < 8:
+			if self.position[1] + count < 8:
 				self.poss_moves[3].append([self.position[0], self.position[1] + count])
 
 		# diagonally left/right, up/down moves
@@ -141,7 +143,7 @@ class Tower(Figure):
 			if self.position[1] - count > -1:
 				self.poss_moves[2].append([self.position[0], self.position[1] - count])
 			# checking right cells
-			if position[1] + count < 8:
+			if self.position[1] + count < 8:
 				self.poss_moves[3].append([self.position[0], self.position[1] + count])
 
 
