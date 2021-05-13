@@ -122,7 +122,8 @@ class User:
 	def user_figure_check(self):
 
 		for figure in self.user_figures:
-			if figure.status:
+			if figure.status != False:
 				continue
 			else:
 				del figure
+				break
