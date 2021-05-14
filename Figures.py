@@ -11,13 +11,19 @@ class Figure:
 		# attribute for figure status(alive/dead)
 		self.figure_status = figure_status
 
+	# positions nulify function
+	def positions_cleaning(self):
+
+		self.poss_moves = [[], [], [], [], [], [], [], []]
+
+		self.poss_attacks = [[], []]
+
 
 	
 class King(Figure):
 
 
-	def possible_moves(self, special_king_status=True):
-		self.special_king_status = special_king_status
+	def possible_moves(self):
 
 		# forward, backwards, left and right moving
 		for count in range(1, 2):
@@ -110,7 +116,7 @@ class Soldier(Figure):
 		elif 0 < self.position[0] < 7 and self.position[0] != 6:
 			self.poss_moves[2].append([self.position[0] - 1, self.position[1]])
 
-		# possible attack part
+		# possible attack
 		# if soldier is on the first column of the board:
 		if self.position[1] == 0:
 			# diagonal right forward

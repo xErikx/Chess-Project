@@ -2,9 +2,12 @@ from Figures import King, Queen, Soldier, Tower, Horse, Bishop
 
 class Board: 
 
-	def __init__(self, user):
+	def __init__(self, user_white, user_black):
 
-		self.user = user
+		self.user_white = user_white
+
+		self.user_black = user_black
+
 		self.board = [[None, None, None, None, None, None, None, None],
 					  [None, None, None, None, None, None, None, None],
 					  [None, None, None, None, None, None, None, None],
@@ -19,40 +22,67 @@ class Board:
 	def figures_placing(self):
 		# placing soldiers
 		for figure in range(0, 8):
-			self.board[6][figure] = Soldier("white", True)
+			self.board[6][figure] = Soldier("white")
+
 			self.board[6][figure].position = [6, figure]
 
+			self.user_white.user_figures.append(self.board[6][figure])
+
 		for figure in range(0, 8):
-			self.board[1][figure] = Soldier("black", True)
+
+			self.board[1][figure] = Soldier("black")
+
 			self.board[1][figure].position = [1, figure]
 
+			self.user_black.user_figures.append(self.board[1][figure])
+
 		# placing Kings
-		self.board[0][3], self.board[7][4] = King("black", "King"), King("white", "King")
+		self.board[0][3], self.board[7][4] = King("black"), King("white")
 		self.board[0][3].position, self.board[7][4].position  = [0, 3], [7, 4]
 
+		self.user_black.user_figures.append(self.board[0][3])
+		self.user_white.user_figures.append(self.board[7][4])
+
 		# placing Queens
-		self.board[0][4], self.board[7][3] = Queen("black", True), Queen("white", True)
+		self.board[0][4], self.board[7][3] = Queen("black"), Queen("white")
 		self.board[0][4].position, self.board[7][3].position  = [0, 4], [7, 3]
 
+		self.user_black.user_figures.append(self.board[0][4])
+		self.user_white.user_figures.append(self.board[7][3])
+
 		# placing Bishops
-		self.board[0][2], self.board[0][5] = Bishop("black", True), Bishop("white", True)
-		self.board[7][2], self.board[7][5] = Bishop("black", True), Bishop("white", True)
+		self.board[0][2], self.board[0][5] = Bishop("black"), Bishop("black")
+		self.board[7][2], self.board[7][5] = Bishop("white"), Bishop("white")
 		self.board[0][2].position, self.board[0][5].position  = [0, 2], [0, 5]
 		self.board[7][2].position, self.board[7][5].position  = [7, 2], [7, 5]
 
+		self.user_black.user_figures.append(self.board[0][2])
+		self.user_white.user_figures.append(self.board[7][2])
+		self.user_black.user_figures.append(self.board[0][5])
+		self.user_white.user_figures.append(self.board[7][5])
 
 		# placing Horses
-		self.board[0][1], self.board[0][6] = Horse("black", True), Horse("white", True)
-		self.board[7][1], self.board[7][6] = Horse("black", True), Horse("white", True)
+		self.board[0][1], self.board[0][6] = Horse("black"), Horse("black")
+		self.board[7][1], self.board[7][6] = Horse("white"), Horse("white")
 		self.board[0][1].position, self.board[0][6].position  = [0, 1], [0, 6]
 		self.board[7][1].position, self.board[7][6].position  = [7, 1], [7, 6]
 
+		self.user_black.user_figures.append(self.board[0][1])
+		self.user_white.user_figures.append(self.board[7][1])
+		self.user_black.user_figures.append(self.board[0][6])
+		self.user_white.user_figures.append(self.board[7][6])
+
 
 		# placing Towers
-		self.board[0][0], self.board[0][7] = Tower("black", True), Tower("white", True)
-		self.board[7][0], self.board[7][7] = Tower("black", True), Tower("white", True)
+		self.board[0][0], self.board[0][7] = Tower("black"), Tower("black")
+		self.board[7][0], self.board[7][7] = Tower("white"), Tower("white")
 		self.board[0][0].position, self.board[0][7].position  = [0, 0], [0, 7]
 		self.board[7][0].position, self.board[7][7].position  = [7, 0], [7, 7]
+
+		self.user_black.user_figures.append(self.board[0][0])
+		self.user_white.user_figures.append(self.board[7][0])
+		self.user_black.user_figures.append(self.board[0][7])
+		self.user_white.user_figures.append(self.board[7][7])
 
 
 	# # giving colors to figures(objects) on board
@@ -175,10 +205,7 @@ class Board:
 					self.board[figure_from[0]][figure_from[1]] = None
 
 					# possible moves nullify as we could pack them once more on the next move
-					self.board[figure_to[0]][figure_to[1]].poss_moves = [[], [], [], [], [], [], [], []]
-
-					# possible attacks nullify as possible moves with the same logic
-					self.board[figure_to[0]][figure_to[1]].poss_attacks = [[], []]
+					self.board[figure_to[0]][figure_to[1]].positions_cleaning()
 
 				# 	
 				elif self.cell_status and self.secondary_status:
@@ -202,10 +229,7 @@ class Board:
 						self.board[figure_from[0]][figure_from[1]] = None
 
 						# possible moves nullify as we could pack them once more on the next move
-						self.board[figure_to[0]][figure_to[1]].poss_moves = [[], [], [], [], [], [], [], []]
-
-						# possible attacks nullify as possible moves with the same logic
-						self.board[figure_to[0]][figure_to[1]].poss_attacks = [[], []]
+						self.board[figure_to[0]][figure_to[1]].positions_cleaning()
 
 					else:
 						print("Invalid choice, your figure is on your way")
@@ -219,7 +243,7 @@ class Board:
 				break
 
 
-	def check(self):
+	def check(self, user):
 
 		main_loop = False
 
@@ -237,15 +261,21 @@ class Board:
 				# cheking every direction 
 				for coordinate in cells:
 
-					# if there is a king on attack direction
-					if self.board[coordinate[0]][coordinate[1]].figure_status == "King" and self.board[coordinate[0]][coordinate[1]].color != figure.color:
-						print("It's check!")
+					if self.board[coordinate[0]][coordinate[1]] != None:
 
-						figure.poss_moves = [[], [], [], [], [], [], [], []]
+						# if there is a king on attack direction
+						if type(self.board[coordinate[0]][coordinate[1]]) == type(King) and self.board[coordinate[0]][coordinate[1]].color != figure.color:
 
-						figure.self.poss_attacks = [[], []]
+							print("It's check!")
 
-						loop_break = True
+							# possible moves and attacks nullify as we could pack them once more on the next move
+
+							figure.positions_cleaning()
+
+							break
+
+						else:
+							break
 
 					else:
 						continue
