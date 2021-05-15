@@ -243,6 +243,7 @@ class Board:
 				break
 
 
+	# check function
 	def check(self, user):
 
 		main_loop = False
@@ -286,3 +287,85 @@ class Board:
 
 			if main_loop:
 				break
+
+
+	# check and mate function which defines the win
+	def check_and_mate(self, user_1, user_2):
+
+		# users' kign object 
+		self.king_object = None
+
+		# empty list for comparing Kings avaiable moves
+		# and opponents cells under attack
+		self.opponent_attack_cells = []
+
+		# looking for king
+		for king in user_1.user_figures:
+			if type(king) == type(King):
+				self.king_object = king
+				break
+			else:
+				continue
+
+		# generating possible moves for king and saving the list
+		self.king_moves = self.king_object.possible_moves()
+
+
+
+		# Generating and filling all cells of the opponents figures
+		# which can attack King at the moment
+		main_loop = False
+
+		for figure in user_2.user_figures:
+
+			# generating possible moves
+			figure.possible_moves()
+
+			# status to break loop
+			loop_break = False
+
+			# cheking the directions if any figure has opponent King under it's attack
+			for cells in figure.poss_attacks:
+
+				# cheking every direction 
+				for coordinate in cells:
+
+					if self.board[coordinate[0]][coordinate[1]] != None:
+
+						# if there is a king on attack direction
+						if type(self.board[coordinate[0]][coordinate[1]]) == type(King) and self.board[coordinate[0]][coordinate[1]].color != figure.color:
+
+							self.opponent_attack_cells.append(cells)
+
+							# possible moves and attacks nullify as we could pack them once more on the next move
+
+							figure.positions_cleaning()
+
+							break
+
+						else:
+							break
+
+					else:
+						continue
+
+				if loop_break:
+					main_loop = True
+					break
+
+			if main_loop:
+				break
+
+
+		self.game_status = False
+		
+		# comparing cells
+
+		for coordinate in self.king_moves:
+			if coordinate in self.opponent_attack_cells:
+				continue
+			else:
+				self.game_status = True
+				break
+
+		return self.game_status
