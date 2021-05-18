@@ -85,21 +85,6 @@ class Board:
 		self.user_white.user_figures.append(self.board[7][7])
 
 
-	# # giving colors to figures(objects) on board
-	# def board_initializing(self):
-	# 	# initializing blue(black) figures
-	# 	for figures in self.board[0]:
-	# 		figures.color = f"\033[1;34;40m {figures}"
-	# 	for figures in self.board[1]:
-	# 		figures = f"\033[1;34;40m {figures}"
-
-	# 	# initializing white figures
-	# 	for figures in self.board[7]:
-	# 		figures = f"\033[1;37;40m {Figures}"
-	# 	for figures in self.board[6]:
-	# 		figures = f"\033[1;37;40m {Figures}"
-
-
 
 	def board_move_figure(self, figure_from, figure_to):
 
@@ -120,7 +105,7 @@ class Board:
 		while True:
 
 			# getting our possible moves for figure
-			self.figure_object.possible_moves()
+			self.figure_object.gen_possible_moves()
 
 			self.loop_must_break = False
 
@@ -251,7 +236,7 @@ class Board:
 		for figure in user.user_figures:
 
 			# generating possible moves
-			figure.possible_moves()
+			figure.gen_possible_moves()
 
 			# status to break loop
 			loop_break = False
@@ -265,17 +250,19 @@ class Board:
 					if self.board[coordinate[0]][coordinate[1]] != None:
 
 						# if there is a king on attack direction
-						if type(self.board[coordinate[0]][coordinate[1]]) == type(King) and self.board[coordinate[0]][coordinate[1]].color != figure.color:
+						if type(self.board[coordinate[0]][coordinate[1]]) == King and self.board[coordinate[0]][coordinate[1]].color != figure.color:
 
 							print("It's check!")
 
 							# possible moves and attacks nullify as we could pack them once more on the next move
 
 							figure.positions_cleaning()
-
+							
+							loop_break = True
 							break
 
 						else:
+
 							break
 
 					else:
@@ -289,10 +276,13 @@ class Board:
 				break
 
 
+
 	# check and mate function which defines the win
 	def check_and_mate(self, user_1, user_2):
 
-		# users' kign object 
+		# import ipdb; ipdb.set_trace()
+
+		# users' king object 
 		self.king_object = None
 
 		# empty list for comparing Kings avaiable moves
@@ -301,71 +291,99 @@ class Board:
 
 		# looking for king
 		for king in user_1.user_figures:
-			if type(king) == type(King):
+			if type(king) == King:
 				self.king_object = king
 				break
 			else:
 				continue
 
-		# generating possible moves for king and saving the list
-		self.king_moves = self.king_object.possible_moves()
+		# generating king's possible moves
+		self.king_object.gen_possible_moves()
 
+		# saving the list
+		self.king_moves = self.king_object.poss_moves
 
+		# kings moves simple coordinates list
+		self.king_simple_moves = []
 
-		# Generating and filling all cells of the opponents figures
-		# which can attack King at the moment
-		main_loop = False
+		# checking the directions for king
+		for directions in self.king_moves:
 
-		for figure in user_2.user_figures:
+			# checking every single direction
+			for coordinate in directions:
 
-			# generating possible moves
-			figure.possible_moves()
+				if self.board[coordinate[0]][coordinate[1]] != None:
 
-			# status to break loop
-			loop_break = False
+					# checking if the figure is ours or not
+					if self.board[coordinate[0]][coordinate[1]].color == self.king_object.color:
 
-			# cheking the directions if any figure has opponent King under it's attack
-			for cells in figure.poss_attacks:
-
-				# cheking every direction 
-				for coordinate in cells:
-
-					if self.board[coordinate[0]][coordinate[1]] != None:
-
-						# if there is a king on attack direction
-						if type(self.board[coordinate[0]][coordinate[1]]) == type(King) and self.board[coordinate[0]][coordinate[1]].color != figure.color:
-
-							self.opponent_attack_cells.append(cells)
-
-							# possible moves and attacks nullify as we could pack them once more on the next move
-
-							figure.positions_cleaning()
-
-							break
-
-						else:
-							break
+						del coordinate
 
 					else:
 						continue
 
-				if loop_break:
-					main_loop = True
-					break
+		# king move simplify 
+		for direction in self.king_moves:
+			for coordinate in direction:
+				self.king_simple_moves.append(coordinate)
 
-			if main_loop:
-				break
+		# checking opponents figure possible attack moves
+		for figure in user_2.user_figures:
+
+			figure.gen_possible_moves()
+
+			for direction in figure.poss_attacks:
+
+				for coordinate in direction:
+
+					if coordinate in self.king_simple_moves:
+
+						# so can attack some of king moves
+						# saving move to index for checking all cells before the move to position
+						self.move_index = direction.index(coordinate)
+
+						# cells status
+						self.cell_status = True
+
+						# second status in case if there is a figure on the final destination
+						self.secondary_status = None
+
+						# checking the cells before the last move position
+						for cell in range(0, self.move_index):
+
+							main_cell = direction[cell]
+
+							# checking if all the cells before the final destination
+							# are empty, if so, move goes on
+							if self.board[main_cell[0]][main_cell[1]] == None and self.board[coordinate[0]][coordinate[1]] == None:
+								continue
+
+							# in case if all cells before the final are empty
+							# and the final destination cell is not empty(is another figure object)
+							elif self.board[main_cell[0]][main_cell[1]] == None and self.board[coordinate[0]][coordinate[1]] != None:
+
+								self.secondary_status = True
+								continue
+
+							# this condition is for case, when there is a figure on a way to the last spot
+							else:
+
+								self.cell_status = False
+								self.secondary_status  = False
+								
+								for move in self.king_simple_moves:
+									if move == coordinate:
+										del move
+
+								break
 
 
-		self.game_status = False
-		
-		# comparing cells
+		if len(self.king_simple_moves) < 1:
+			return False
+		else:
+			return True				
 
-		for coordinate in self.king_moves:
-			if coordinate in self.opponent_attack_cells:
-				continue
-			else:
-				self.game_status = True
-				break
 
-		return self.game_status
+
+
+

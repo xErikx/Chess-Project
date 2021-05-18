@@ -23,8 +23,9 @@ class Figure:
 class King(Figure):
 
 
-	def possible_moves(self):
+	def gen_possible_moves(self):
 
+		
 		# forward, backwards, left and right moving
 		for count in range(1, 2):
 
@@ -61,14 +62,14 @@ class King(Figure):
 				self.poss_moves[7].append([self.position[0] + count, self.position[1] + count])
 
 		# the moves are same as attack spots
-		self.poss_moves = self.poss_attacks
+		self.poss_attacks = self.poss_moves 
 
 
 class Queen(Figure):
 
 
 
-	def possible_moves(self):
+	def gen_possible_moves(self):
 
 		# forward, backwards, left and right moving
 		for count in range(1, 8):
@@ -101,13 +102,13 @@ class Queen(Figure):
 				self.poss_moves[7].append([self.position[0] + count, self.position[1] + count])
 			
 		# possible moves are the same as possible attacks
-		self.poss_moves = self.poss_attacks
+		self.poss_attacks = self.poss_moves 
 
 
 class Soldier(Figure):
 
 
-	def possible_moves(self):
+	def gen_possible_moves(self):
 		# initial two steps forward from start
 		if self.position[0] == 6:
 			self.poss_moves[0].append([self.position[0] - 1, self.position[1]])
@@ -135,7 +136,7 @@ class Soldier(Figure):
 class Tower(Figure):
 
 
-	def possible_moves(self):
+	def gen_possible_moves(self):
 
 		# forward, backwards, left and right moving
 		for count in range(1, 8):
@@ -153,14 +154,14 @@ class Tower(Figure):
 				self.poss_moves[3].append([self.position[0], self.position[1] + count])
 
 
-		self.poss_moves = self.poss_attacks
+		self.poss_attacks = self.poss_moves 
 
 	
 
 class Horse(Figure):
 
 
-	def possible_moves(self):
+	def gen_possible_moves(self):
 
 		if self.position[0] - 2 > -1 and self.position[1] - 1 > - 1:
 		    # forward left move
@@ -188,13 +189,13 @@ class Horse(Figure):
 
 
 		# the moves are same as attack spots
-		self.poss_moves = self.poss_attacks
+		self.poss_attacks = self.poss_moves 
 
 
 class Bishop(Figure):
 
 
-	def possible_moves(self):
+	def gen_possible_moves(self):
 
 		# diagonally left/right, up/down moves
 		for count in range(1, 8):
@@ -212,4 +213,4 @@ class Bishop(Figure):
 				self.poss_moves[4].append([self.position[0] + count, self.position[1] + count])
 
 		# moves are the same as attacks
-		self.poss_moves = self.poss_attacks
+		self.poss_attacks = self.poss_moves 

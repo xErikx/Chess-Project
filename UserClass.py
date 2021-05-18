@@ -4,11 +4,11 @@ from email.mime.text import MIMEText
 
 class User: 
 
-	def __init__(self, win_score=0, loss_score=0, users_config)
+	def __init__(self, users_config, win_score=0, loss_score=0):
 
 		self.users_config = users_config
-		self.win_score = score
-		self.lose_score
+		self.win_score = win_score
+		self.lose_score = loss_score
 		self.user_figures = []
 
 
