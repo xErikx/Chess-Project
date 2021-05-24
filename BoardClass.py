@@ -218,6 +218,7 @@ class Board:
 
 					else:
 						print("Invalid choice, your figure is on your way")
+
 				else:
 					print("Invalid choice, there is a figure on your way")
 
@@ -225,6 +226,9 @@ class Board:
 			# in case if we had False status and there is no such coordinates for figure to move to
 			else:
 				print("Wrong direction, please enter a valid cell for move")
+
+				return False
+				
 				break
 
 
