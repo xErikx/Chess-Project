@@ -109,28 +109,59 @@ class Soldier(Figure):
 
 
 	def gen_possible_moves(self):
-		# initial two steps forward from start
-		if self.position[0] == 6:
-			self.poss_moves[0].append([self.position[0] - 1, self.position[1]])
-			self.poss_moves[1].append([self.position[0] - 2, self.position[1]])
-		# forward move
-		elif 0 < self.position[0] < 7 and self.position[0] != 6:
-			self.poss_moves[2].append([self.position[0] - 1, self.position[1]])
 
-		# possible attack
-		# if soldier is on the first column of the board:
-		if self.position[1] == 0:
-			# diagonal right forward
-			self.poss_attacks[0].append([self.position[0] - 1, self.position[1] + 1])
-		# if soldier is on the last column of the board
-		elif self.position[1] == 7:
-			# diagonal left forward
-			self.poss_attacks[1].append([self.position[0] - 1, self.position[1] - 1])
+		# generates moves, where soldier can only move forward if
+		# it's color is white
+		if self.figure_color == "white":
+
+			# initial two steps forward from start
+			if self.position[0] == 6:
+				self.poss_moves[0].append([self.position[0] - 1, self.position[1]])
+				self.poss_moves[1].append([self.position[0] - 2, self.position[1]])
+			# forward move
+			elif 0 < self.position[0] < 7 and self.position[0] != 6:
+				self.poss_moves[2].append([self.position[0] - 1, self.position[1]])
+
+			# possible attack
+			# if soldier is on the first column of the board:
+			if self.position[1] == 0:
+				# diagonal right forward
+				self.poss_attacks[0].append([self.position[0] - 1, self.position[1] + 1])
+			# if soldier is on the last column of the board
+			elif self.position[1] == 7:
+				# diagonal left forward
+				self.poss_attacks[1].append([self.position[0] - 1, self.position[1] - 1])
+			else:
+				# diagonal left forward
+				self.poss_attacks[0].append([self.position[0] - 1, self.position[1] - 1])
+				# diagonal right forward
+				self.poss_attacks[1].append([self.position[0] - 1, self.position[1] + 1])
+
+		# the case, when soldiers color is black and it can move only backwards
 		else:
-			# diagonal left forward
-			self.poss_attacks[0].append([self.position[0] - 1, self.position[1] - 1])
-			# diagonal right forward
-			self.poss_attacks[1].append([self.position[0] - 1, self.position[1] + 1])
+
+			# initial two steps forward from start
+			if self.position[0] == 1:
+				self.poss_moves[0].append([self.position[0] + 1, self.position[1]])
+				self.poss_moves[1].append([self.position[0] + 2, self.position[1]])
+			# forward move
+			elif 0 < self.position[0] < 7 and self.position[0] != 1:
+				self.poss_moves[2].append([self.position[0] + 1, self.position[1]])
+
+			# possible attack
+			# if soldier is on the first column of the board:
+			if self.position[1] == 0:
+				# diagonal right forward
+				self.poss_attacks[0].append([self.position[0] + 1, self.position[1] + 1])
+			# if soldier is on the last column of the board
+			elif self.position[1] == 7:
+				# diagonal left forward
+				self.poss_attacks[1].append([self.position[0] + 1, self.position[1] - 1])
+			else:
+				# diagonal left forward
+				self.poss_attacks[0].append([self.position[0] + 1, self.position[1] - 1])
+				# diagonal right forward
+				self.poss_attacks[1].append([self.position[0] + 1, self.position[1] + 1])
 
 
 class Tower(Figure):

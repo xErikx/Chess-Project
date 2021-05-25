@@ -195,9 +195,9 @@ class Board:
 				# 	
 				elif self.cell_status and self.secondary_status:
 
-					# checking colors
+					# checking figure_colors
 					# if there is an opponent figure on a way, it's being eaten and the user's figure moves on
-					if self.board[figure_to[0]][figure_to[1]].color != self.figure_object.color:
+					if self.board[figure_to[0]][figure_to[1]].figure_color != self.figure_object.figure_color:
 
 						# as there is an enemy figure on a way, before the moving, we make figure status=False
 						# this allows us to delete the figure from users pack and also for other figure movement 
@@ -254,7 +254,7 @@ class Board:
 					if self.board[coordinate[0]][coordinate[1]] != None:
 
 						# if there is a king on attack direction
-						if type(self.board[coordinate[0]][coordinate[1]]) == King and self.board[coordinate[0]][coordinate[1]].color != figure.color:
+						if type(self.board[coordinate[0]][coordinate[1]]) == King and self.board[coordinate[0]][coordinate[1]].figure_color != figure.figure_color:
 
 							print("It's check!")
 
@@ -319,7 +319,7 @@ class Board:
 				if self.board[coordinate[0]][coordinate[1]] != None:
 
 					# checking if the figure is ours or not
-					if self.board[coordinate[0]][coordinate[1]].color == self.king_object.color:
+					if self.board[coordinate[0]][coordinate[1]].figure_color == self.king_object.figure_color:
 
 						del coordinate
 

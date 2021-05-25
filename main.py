@@ -27,22 +27,28 @@ def gameplay(user_1, user_2):
 
 	# creating a board for gameplay
 	if color_turn == True:
+		# first user plays as whites
 		board = Board(user_1, user_2)
+		print(f"{user_1} 1 plays as white and {user_2} as black")
 		TURN = True
 	else:
+		# second user plays as whites
 		board = Board(user_2, user_1)
+		print(f"{user_2} 2 plays as white and {user_1} as black")
 		TURN = False
 
 	# placing the figures for the gameplay
 	board.figures_placing()
 
 
+
+
 	while board.check_and_mate(user_1, user_2) and board.check_and_mate(user_2, user_1):
 
 		if TURN == True:
-			# board figure move command
-			board.board_move_figure(user_1.user_move_from(), user_1.user_move_to())
 
+			print("user_1 turn")
+			# board figure move command
 			# checking if the direction is correct, else board tries to move with new parameters
 			if board.board_move_figure(user_1.user_move_from(), user_1.user_move_to()) != False:
 
@@ -54,15 +60,17 @@ def gameplay(user_1, user_2):
 				user_2.user_figure_check()
 
 				# changing the turn
-				Turn = False
+
+				TURN = False
 
 			# in case if the move was wrong, we give another chance for player
 			else:
 				board.board_move_figure(user_1.user_move_from(), user_1.user_move_to())
-		else:
-			# board figure move command
-			board.board_move_figure(user_2.user_move_from(), user_2.user_move_to())
 
+		else:
+
+			print("user_2 turn")
+			# board figure move command
 			# checking if the direction is correct, else board tries to move with new parameters
 			if board.board_move_figure(user_2.user_move_from(), user_2.user_move_to()) != False:
 
@@ -74,7 +82,8 @@ def gameplay(user_1, user_2):
 				user_1.user_figure_check()
 
 				# changing the turn
-				Turn = True
+				print("Black Turn")
+				TURN = True
 
 			# in case if the move was wrong, we give another chance for player
 			else:
@@ -83,11 +92,13 @@ def gameplay(user_1, user_2):
 	# checking who lost and who won
 	else:
 		if board.check_and_mate(user_1, user_2) == False:
-			print(f"{user_2.name} won!")
+			print(f"It's check and mate \n \
+				{user_2.nickname} won!")
 			user_2.win_score += 1
 			user_1.lose_score += 1
 		else:
-			print(f"{user_1.name} won!")
+			print(f"It's check and mate \n \
+				{user_2.nickname} won!")
 			user_1.win_score += 1
 			user_2.lose_score += 1
 
@@ -100,6 +111,7 @@ def main():
 	
 	user_1 = User(None)
 	user_2 = User(None)
+	gameplay(user_1, user_2)
 	
 
 if __name__ == "__main__":

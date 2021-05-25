@@ -111,78 +111,69 @@ class User:
 
 		print("Which figure? (example=b2)")
 
+		loop_status = True
+
 		choice = str(input(": "))
 
-	
+		while loop_status:
 
-		# second position
-		if choice[0] == "a":
-			second_position = 0
-		elif choice[0] == "b":
-			second_position = 1
-		elif choice[0] == "c":
-			second_position = 2
-		elif choice[0] == "d":
-			second_position = 3
-		elif choice[0] == "e":
-			second_position = 4
-		elif choice[0] == "f":
-			second_position = 5
-		elif choice[0] == "g":
-			second_position = 6
-		elif choice[0] == "h":
-			second_position = 7
+		    if choice[1].isnumeric() and choice[0].isalpha():
+		        loop_status = False
+		    else:
+		        print("Please insert correct values, example: b2")
+		        choice = str(input(": "))
 
 		# first position
 		from_list.append(8 - int(choice[1]))
+
+		# second position
+		second_position = ord(choice[0]) - 97
 
 		# second position
 		from_list.append(second_position)		
 
 		return from_list
 
+
 	# user moving his figures to coordinates
 	def user_move_to(self):
+
 		second_position = None
 
 		to_list = []
 
-		print("Where? (example=b3)")
+		print("Where to? (example=b2)")
+
+		loop_status = True
 
 		choice = str(input(": "))
 
-		# second position
-		if choice[0] == "a":
-			second_position = 0
-		elif choice[0] == "b":
-			second_position = 1
-		elif choice[0] == "c":
-			second_position = 2
-		elif choice[0] == "d":
-			second_position = 3
-		elif choice[0] == "e":
-			second_position = 4
-		elif choice[0] == "f":
-			second_position = 5
-		elif choice[0] == "g":
-			second_position = 6
-		elif choice[0] == "h":
-			second_position = 7
+		while loop_status:
+
+		    if choice[1].isnumeric() and choice[0].isalpha():
+		        loop_status = False
+		    else:
+		        print("Please insert correct values, example: b2")
+		        choice = str(input(": "))
 
 		# first position
-		to_ist.append(8 - int(choice[1]))
+		to_list.append(8 - int(choice[1]))
+
+		# second position
+		second_position = ord(choice[0]) - 97
 
 		# second position
 		to_list.append(second_position)		
 
 		return to_list
+		
 
 	# checking the status for the figure
 	# if it is false, we delete it from the list
 	def user_figure_check(self):
 
 		for figure in self.user_figures:
-			if figure.status != False:
+			if figure.figure_status != False:
 				continue
 			else:
 				del figure
