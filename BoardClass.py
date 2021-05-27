@@ -284,8 +284,6 @@ class Board:
 	# check and mate function which defines the win
 	def check_and_mate(self, user_1, user_2):
 
-		# import ipdb; ipdb.set_trace()
-
 		# users' king object 
 		self.king_object = None
 
@@ -388,6 +386,98 @@ class Board:
 			return True				
 
 
+	def soldier_replace(self, user):
+
+		trigger = True
+
+		while True:
+
+			# index variable to find the exact figure
+			# which has certain position for replacing it
+			index = -1
+
+			# color variable to save the color parameter
+			# for the further use
+			color = None
+
+			# position variable to save the position for the further successeful replacement
+			position = None
+
+			# checking every single soldier figure in players figure list
+			for figure in user.user_figures:
+
+				# checking the color
+				if figure.figure_color == "white":
+
+					# saving the color for the further use
+					color = figure.figure_color
+
+					if figure.position[0] == 0 and type(figure) == Soldier:
+						position = figure.position
+						index += 1
+						trigger = False
+						break 
+					else:
+						index += 1
+
+
+				# checking the color
+				elif figure.figure_color == "black":
+
+					# saving the color for the further use
+					color = figure.figure_color
+
+					if figure.position[0] == 7 and type(figure) == Soldier:
+						position = figure.position
+						index += 1
+						trigger = False
+						break 
+					else:
+						index += 1
+
+			if trigger:
+				break
+
+
+			sample_figures = ["queen", "bishop", "horse", "tower"]
+
+			print("Which figure do you want?")
+			print("Example: bishop")
+
+			user_choice = str(input(": "))
+
+			# loop status
+			status = True
+
+			while status:
+
+				if user_choice not in sample_figures:
+					print("Please insert correct name of preferable figure")
+					user_choice = str(input(": "))
+
+				else:
+					status = False
+
+
+			if user_choice == "queen":
+				self.board[position[0]][position[1]] = Queen(color)
+				self.board[position[0]][position[1]] = position
+				user.user_figures[index] = self.board[position[0]][position[1]]
+			elif user_choice == "bishop":
+				self.board[position[0]][position[1]] = Bishop(color)
+				self.board[position[0]][position[1]] = position
+				user.user_figures[index] = self.board[position[0]][position[1]]
+			elif user_choice == "horse":
+				self.board[position[0]][position[1]] = Horse(color)
+				self.board[position[0]][position[1]] = position
+				user.user_figures[index] = self.board[position[0]][position[1]]
+			elif user_choice == "tower":
+				self.board[position[0]][position[1]] = Tower(color)
+				self.board[position[0]][position[1]] = position
+				user.user_figures[index] = self.board[position[0]][position[1]]
+
+			break
+			
 
 
 

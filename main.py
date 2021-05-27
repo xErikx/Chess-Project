@@ -52,6 +52,9 @@ def gameplay(user_1, user_2):
 			# checking if the direction is correct, else board tries to move with new parameters
 			if board.board_move_figure(user_1.user_move_from(), user_1.user_move_to()) != False:
 
+				# checking if the soldier is on the last line of his way and needs replacement
+				board.soldier_replace(user_1)
+
 				# checking if there is check for user_2
 				board.check(user_1)
 
@@ -74,6 +77,9 @@ def gameplay(user_1, user_2):
 			# checking if the direction is correct, else board tries to move with new parameters
 			if board.board_move_figure(user_2.user_move_from(), user_2.user_move_to()) != False:
 
+				# checking if the soldier is on the last line of his way and needs replacement
+				board.soldier_replace(user_1)
+
 				# checking if there is check for user_1
 				board.check(user_2)
 
@@ -82,7 +88,7 @@ def gameplay(user_1, user_2):
 				user_1.user_figure_check()
 
 				# changing the turn
-				print("Black Turn")
+
 				TURN = True
 
 			# in case if the move was wrong, we give another chance for player
@@ -112,7 +118,6 @@ def main():
 	user_1 = User(None)
 	user_2 = User(None)
 	gameplay(user_1, user_2)
-	
 
 if __name__ == "__main__":
     main()
