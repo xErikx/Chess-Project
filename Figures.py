@@ -13,12 +13,18 @@ class Figure:
 		# attribute for figure status(alive/dead)
 		self.figure_status = figure_status
 
+		self.original_place = True
+
+
 	# positions nulify function
 	def positions_cleaning(self):
 
 		self.poss_moves = [[], [], [], [], [], [], [], []]
 
 		self.poss_attacks = [[], []]
+
+	def update_location(self):
+		self.original_place = False
 
 
 	
@@ -113,57 +119,32 @@ class Soldier(Figure):
 	def gen_possible_moves(self):
 
 		# generates moves, where soldier can only move forward if
-		# it's color is white
-		if self.figure_color == "white":
+		# color is white, and backwards if it's black
+		move_changer = 1 if self.figure_color == 'white' else -1 
 
-			# initial two steps forward from start
-			if self.position[0] == 6:
-				self.poss_moves[0].append([self.position[0] - 1, self.position[1]])
-				self.poss_moves[1].append([self.position[0] - 2, self.position[1]])
-			# forward move
-			elif 0 < self.position[0] < 7 and self.position[0] != 6:
-				self.poss_moves[2].append([self.position[0] - 1, self.position[1]])
+		# initial two steps forward from start
+		if self.original_place:
+			self.poss_moves[0].append([self.position[0] - 1 * move_changer, self.position[1]])
+			self.poss_moves[1].append([self.position[0] - 2 * move_changer, self.position[1]])
+		# forward move
+		elif 0 < self.position[0] < 7 and  not self.original_place:
+			self.poss_moves[2].append([self.position[0] - 1 * move_changer, self.position[1]])
 
-			# possible attack
-			# if soldier is on the first column of the board:
-			if self.position[1] == 0:
-				# diagonal right forward
-				self.poss_attacks[0].append([self.position[0] - 1, self.position[1] + 1])
-			# if soldier is on the last column of the board
-			elif self.position[1] == 7:
-				# diagonal left forward
-				self.poss_attacks[1].append([self.position[0] - 1, self.position[1] - 1])
-			else:
-				# diagonal left forward
-				self.poss_attacks[0].append([self.position[0] - 1, self.position[1] - 1])
-				# diagonal right forward
-				self.poss_attacks[1].append([self.position[0] - 1, self.position[1] + 1])
-
-		# the case, when soldiers color is black and it can move only backwards
+		# possible attack
+		# if soldier is on the first column of the board:
+		if self.position[1] == 0:
+			# diagonal right forward
+			self.poss_attacks[0].append([self.position[0] - 1 * move_changer, self.position[1] + 1])
+		# if soldier is on the last column of the board
+		elif self.position[1] == 7:
+			# diagonal left forward
+			self.poss_attacks[1].append([self.position[0] - 1 * move_changer, self.position[1] - 1])
 		else:
+			# diagonal left forward
+			self.poss_attacks[0].append([self.position[0] - 1 * move_changer, self.position[1] - 1])
+			# diagonal right forward
+			self.poss_attacks[1].append([self.position[0] - 1 * move_changer, self.position[1] + 1])
 
-			# initial two steps forward from start
-			if self.position[0] == 1:
-				self.poss_moves[0].append([self.position[0] + 1, self.position[1]])
-				self.poss_moves[1].append([self.position[0] + 2, self.position[1]])
-			# forward move
-			elif 0 < self.position[0] < 7 and self.position[0] != 1:
-				self.poss_moves[2].append([self.position[0] + 1, self.position[1]])
-
-			# possible attack
-			# if soldier is on the first column of the board:
-			if self.position[1] == 0:
-				# diagonal right forward
-				self.poss_attacks[0].append([self.position[0] + 1, self.position[1] + 1])
-			# if soldier is on the last column of the board
-			elif self.position[1] == 7:
-				# diagonal left forward
-				self.poss_attacks[1].append([self.position[0] + 1, self.position[1] - 1])
-			else:
-				# diagonal left forward
-				self.poss_attacks[0].append([self.position[0] + 1, self.position[1] - 1])
-				# diagonal right forward
-				self.poss_attacks[1].append([self.position[0] + 1, self.position[1] + 1])
 
 
 class Tower(Figure):

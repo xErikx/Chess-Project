@@ -187,6 +187,7 @@ class Board:
 
 					# making previous cell None, as figure started move from there
 					# which means it must be empty
+					self.board[figure_from[0]][figure_from[1]].update_location()
 					self.board[figure_from[0]][figure_from[1]] = None
 
 					# possible moves nullify as we could pack them once more on the next move
@@ -211,6 +212,7 @@ class Board:
 
 						# making previous cell None, as figure started move from there
 						# which means it must be empty
+						self.board[figure_from[0]][figure_from[1]].update_location()
 						self.board[figure_from[0]][figure_from[1]] = None
 
 						# possible moves nullify as we could pack them once more on the next move

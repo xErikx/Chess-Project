@@ -1,6 +1,7 @@
 import random
 import json
 import smtplib
+import hashlib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -23,6 +24,13 @@ class User:
 
 		# user's email address password
 		self.email_address = input("Enter your email address to send you a password for registration: ")
+
+		# hashing our client password
+		self.bytes_password = str.encode(self.password)
+		self.hashed_password = hashlib.sha1(self.bytes_password)
+
+		# our client password hashed
+		self.hex_dig = self.hashed_password.hexdigest()
 
 		# trigger to stop the loop if we need so
 		self.loop_status = True
