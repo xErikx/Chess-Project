@@ -2,27 +2,49 @@ import random
 import json
 import smtplib
 import hashlib
+import sqlite3
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+
+def configuration_create():
+
+	# creating connection
+	connection = sqlite3.connect("chess_users.db")
+
+	# creating cursor
+	cursor = connection.cursor()
+
+	# creating table with user's creds
+	cursor.execute("CREATE TABLE IF NOT EXISTS user (nickname TEXT, password TEXT, win_score INTEGER, lose_score INTEGER)")
+
+	cursor.close()
+
+	connection.close()
+
+
 class User: 
 
-	def __init__(self, users_config, win_score=0, loss_score=0):
+	def __init__(self, users_config):
 
 		self.users_config = users_config
-		self.win_score = win_score
-		self.lose_score = loss_score
 		self.user_figures = []
 
 
-	def registration(self):		
+	def registration(self):
+
+		# creating connection
+		connection = sqlite3.connect(self.users_config)
+
+		# creating cursor
+		cursor = connection.cursor()
 
 		# user's nickname attribute
 		self.nickname = input("Please enter your nickname: ")
 		# user's client password attribute
 		self.password = input("Please enter your password: ")
 
-		# user's email address password
+		# user's email address to send a password for registration
 		self.email_address = input("Enter your email address to send you a password for registration: ")
 
 		# hashing our client password
@@ -50,6 +72,19 @@ class User:
 
 			if self.user_code_input == self.random:
 
+				params = (self.nickname, self.hex_dig, 0, 0)
+
+				# inserting values to db
+				cursor.execute("INSERT INTO user VALUES (?, ?, ?, ?)", params)
+
+				connection.commit()
+
+				# closing the cursor
+				cursor.close()
+
+				# closing db connection
+				connection.close()
+
 				print("Registration success! \n" \
 					f"Hi {self.nickname}!")
 
@@ -59,13 +94,22 @@ class User:
 				print("The password was wrong, We can send another password")
 				print("If you want new password, type `y` \n" \
 				 "if you wan't to cancel registration, enter `!exit!`")
+
 				while True:
 					self.user_choice_input = input("Your choice: ")
 
 					if self.user_choice_input == "!exit":
+
+						# closing the cursor
+						cursor.close()
+
+						# closing db connection
+						connection.close()
+
 						self.loop_status = False
 						print("Goodbye!")
 						break
+
 					elif self.user_choice_input == "y":
 						self.random = ""
 						break
@@ -74,6 +118,67 @@ class User:
 						self.user_choice_input = input("Your choice: ")
 
 
+	def login(self):
+
+		connection = sqlite3.connect(self.users_config)
+		cursor = connection.cursor()
+
+		# user's nickname attribute
+		self.nickname = input("Please enter your nickname: ")
+		# user's client password attribute
+		self.password = input("Please enter your password: ")
+
+		# hashing our client password
+		self.bytes_password = str.encode(self.password)
+		self.hashed_password = hashlib.sha1(self.bytes_password)
+
+		# our client password hashed
+		self.hex_dig = self.hashed_password.hexdigest()
+
+		rows = cursor.execute(
+		    "SELECT nickname, password, win_score, lose_score FROM user WHERE nickname = ?",
+		    (self.nickname,),
+		).fetchall()
+
+		while True:
+			if rows:
+				if self.hex_dig == rows[0][1]:
+					print(f"login success! Hello {self.nickname}")
+
+					# closing cursor connection
+					cursor.close()
+
+					# closing db connection
+
+					connection.close()
+
+					break
+				else:
+					print("Either your password or login are incorrect, please enter correct values")
+					# user's nickname attribute
+					self.nickname = input("Please enter your nickname: ")
+					# user's client password attribute
+					self.password = input("Please enter your password: ")
+
+					# hashing our client password
+					self.bytes_password = str.encode(self.password)
+					self.hashed_password = hashlib.sha1(self.bytes_password)
+
+					# our client password hashed
+					self.hex_dig = self.hashed_password.hexdigest()
+			else:
+				print("Either your password or login are incorrect, please enter correct values")
+				# user's nickname attribute
+				self.nickname = input("Please enter your nickname: ")
+				# user's client password attribute
+				self.password = input("Please enter your password: ")
+
+				# hashing our client password
+				self.bytes_password = str.encode(self.password)
+				self.hashed_password = hashlib.sha1(self.bytes_password)
+
+				# our client password hashed
+				self.hex_dig = self.hashed_password.hexdigest()
 
 
 
@@ -110,6 +215,57 @@ class User:
 		self.server.close()
 
 
+	# main Register, Login function
+	def connect(self):
+		"""
+	    Connect function:
+
+	    Connect function, which activates as the programm starts
+	    providing Login?/Register option for user
+
+	    Attributes:
+        
+	    ----------
+	    choice: user's choice variable
+    	"""
+
+		# ask user if register or login 
+
+		print("Would You like to register or login? \n",
+			"if you want to register press `r` \n",
+			"if you want to login press `l` \n",
+			"If you want to close the programm type `!exit`")
+
+		# user's choice
+		choice = str(input(": "))
+
+		# loop for executing the login/register process,
+		# and in case if user write's wrong initial,
+		# programm will work untill it executes properly
+
+		while True:
+
+			# register option
+			if choice == "r":
+				self.registration()
+				break
+
+			# login option
+			elif choice == "l":
+				self.login()
+				break
+
+			# programm exit option
+			elif choice == "!exit":
+				print("Closing the programm...")
+				print("Goodbye!")
+				break
+
+			else:
+				print("Please enter valid choice: ")
+				choice = str(input())
+
+
 	# user moving his figures from coordinates:
 	def user_move_from(self):
 
@@ -121,15 +277,25 @@ class User:
 
 		loop_status = True
 
+		secondary_status = True
+
 		choice = str(input(": "))
 
 		while loop_status:
 
-		    if choice[1].isnumeric() and choice[0].isalpha():
+		    if choice[1].isnumeric() and choice[0].isalpha() and choice[1] != 0:
 		        loop_status = False
 		    else:
 		        print("Please insert correct values, example: b2")
 		        choice = str(input(": "))
+
+		while secondary_status:
+
+			if choice[0] in "abcdefgh" and 0 < int(choice[1]) < 9:
+				secondary_status = False
+			else:
+				print("Please insert correct coordinates")
+				choice = str(input(": "))
 
 		# first position
 		from_list.append(8 - int(choice[1]))
@@ -154,15 +320,25 @@ class User:
 
 		loop_status = True
 
+		secondary_status = True
+
 		choice = str(input(": "))
 
 		while loop_status:
 
-		    if choice[1].isnumeric() and choice[0].isalpha():
+		    if choice[1].isnumeric() and choice[0].isalpha() and choice[1] != 0:
 		        loop_status = False
 		    else:
 		        print("Please insert correct values, example: b2")
 		        choice = str(input(": "))
+
+		while secondary_status:
+
+			if choice[0] in "abcdefgh" and 0 < int(choice[1]) < 9:
+				secondary_status = False
+			else:
+				print("Please insert correct coordinates")
+				choice = str(input(": "))
 
 		# first position
 		to_list.append(8 - int(choice[1]))

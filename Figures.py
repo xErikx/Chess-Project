@@ -2,7 +2,7 @@
 
 class Figure:
 
-	def __init__(self, figure_color, figure_status=True):
+	def __init__(self, figure_color, figure_status=True, emblem=None):
 		self.figure_color = figure_color
 		# attribute for all possible moves on deck for figure
 		self.poss_moves = [[], [], [], [], [], [], [], []]
@@ -12,6 +12,7 @@ class Figure:
 		self.position = []
 		# attribute for figure status(alive/dead)
 		self.figure_status = figure_status
+		self.emblem = emblem
 
 		self.original_place = True
 
@@ -176,31 +177,6 @@ class Horse(Figure):
 
 
 	def gen_possible_moves(self):
-
-		# if self.position[1] + 1 < 8:
-		# 	if self.position[0] + 2 < 8:
-		# 		self.poss_moves[0].append([self.position[0] + 2, self.position[1] + 1])
-		# 	elif self.position[0] - 2 > -1:
-		# 		self.poss_moves[4].append([self.position[0] - 2, self.position[1] + 1])
-
-		# if self.position[1] - 1 > -1:
-		# 	if self.position[0] + 2 < 8:
-		# 		self.poss_moves[1].append([self.position[0] + 2, self.position[1] - 1])
-		# 	elif self.position[0] - 2 > -1:
-		# 		self.poss_moves[5].append([self.position[0] - 2, self.position[1] - 1])
-
-		# if self.position[1] + 2 < 8:
-		# 	if self.position[0] + 1 < 8:
-		# 		self.poss_moves[2].append([self.position[0] + 1, self.position[1] + 2])
-		# 	elif self.position[0] - 1 > -1:
-		# 		self.poss_moves[6].append([self.position[0] - 1, self.position[1] + 2])
-
-		# if self.position[1] - 2 > -1:
-		# 	if self.position[0] + 1 < 8:
-		# 		self.poss_moves[3].append([self.position[0] + 1, self.position[1] - 2])
-		# 	elif self.position[0] - 1 > -1:
-		# 		self.poss_moves[7].append([self.position[0] - 1, self.position[1] - 2])
-
 
 		if self.position[0] + 2 < 8 and self.position[1] + 1 < 8: #1
 			self.poss_moves[0].append([self.position[0] + 2, self.position[1] + 1])

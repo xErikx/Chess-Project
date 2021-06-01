@@ -1,51 +1,45 @@
 import random
 from BoardClass import Board
-from UserClass import User
+from UserClass import User, UserCommunication, configuration_create
 from Figures import King, Queen, Soldier, Tower, Horse, Bishop
 
 TURN = None
 
 
 # deciding colors for players
-def color_decision():
+def color_decision(first, second):
 
 	color = ["white", "black"]
 
 	choice = random.choice(color)
 
 	if choice == "white":
-		return True
+		print("First as white")
+		gameplay(first, second)
 	else:
-		return False
+		print("Second as white")
+		gameplay(second, first)
 
 
 def gameplay(user_1, user_2):
 	global TURN
 
-	# deciding colors for players
-	color_turn = color_decision()
 
-	# creating a board for gameplay
-	if color_turn == True:
-		# first user plays as whites
-		board = Board(user_1, user_2)
-		print(f"{user_1} 1 plays as white and {user_2} as black")
-		TURN = True
-	else:
-		# second user plays as whites
-		board = Board(user_2, user_1)
-		print(f"{user_2} 2 plays as white and {user_1} as black")
-		TURN = False
+	# first user plays as whites
+	board = Board(user_1, user_2)
+	print(f"{user_1} 1 plays as white and {user_2} as black")
+	TURN = True
+
 
 	# placing the figures for the gameplay
 	board.figures_placing()
 
-
-
-
 	while board.check_and_mate(user_1, user_2) and board.check_and_mate(user_2, user_1):
 
 		if TURN == True:
+			
+			board.white_board_print()
+			board.black_board_print()
 
 			print("user_1 turn")
 			# board figure move command
@@ -71,6 +65,9 @@ def gameplay(user_1, user_2):
 				board.board_move_figure(user_1.user_move_from(), user_1.user_move_to())
 
 		else:
+
+			board.black_board_print()
+			board.white_board_print()
 
 			print("user_2 turn")
 			# board figure move command
@@ -114,10 +111,12 @@ def gameplay(user_1, user_2):
 
 
 def main():
-	
-	user_1 = User(None)
-	user_2 = User(None)
-	gameplay(user_1, user_2)
+
+	configuration_create()
+
+	user_1 = User("chess_users.db")
+	user_1.connect()	
+
 
 if __name__ == "__main__":
     main()

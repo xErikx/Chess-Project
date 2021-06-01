@@ -26,6 +26,8 @@ class Board:
 
 			self.board[6][figure].position = [6, figure]
 
+			self.board[6][figure].emblem = "♟"
+
 			self.user_white.user_figures.append(self.board[6][figure])
 
 		for figure in range(0, 8):
@@ -34,11 +36,14 @@ class Board:
 
 			self.board[1][figure].position = [1, figure]
 
+			self.board[1][figure].emblem = "♙"
+
 			self.user_black.user_figures.append(self.board[1][figure])
 
 		# placing Kings
 		self.board[0][3], self.board[7][4] = King("black"), King("white")
 		self.board[0][3].position, self.board[7][4].position  = [0, 3], [7, 4]
+		self.board[0][3].emblem, self.board[7][4].emblem = "♔", "♚"
 
 		self.user_black.user_figures.append(self.board[0][3])
 		self.user_white.user_figures.append(self.board[7][4])
@@ -46,6 +51,7 @@ class Board:
 		# placing Queens
 		self.board[0][4], self.board[7][3] = Queen("black"), Queen("white")
 		self.board[0][4].position, self.board[7][3].position  = [0, 4], [7, 3]
+		self.board[0][4].emblem, self.board[7][3].emblem = "♕", "♛" 
 
 		self.user_black.user_figures.append(self.board[0][4])
 		self.user_white.user_figures.append(self.board[7][3])
@@ -53,8 +59,12 @@ class Board:
 		# placing Bishops
 		self.board[0][2], self.board[0][5] = Bishop("black"), Bishop("black")
 		self.board[7][2], self.board[7][5] = Bishop("white"), Bishop("white")
+
 		self.board[0][2].position, self.board[0][5].position  = [0, 2], [0, 5]
 		self.board[7][2].position, self.board[7][5].position  = [7, 2], [7, 5]
+
+		self.board[0][2].emblem, self.board[0][5].emblem = "♗", "♗"
+		self.board[7][2].emblem, self.board[7][5].emblem = "♝", "♝"
 
 		self.user_black.user_figures.append(self.board[0][2])
 		self.user_white.user_figures.append(self.board[7][2])
@@ -64,8 +74,12 @@ class Board:
 		# placing Horses
 		self.board[0][1], self.board[0][6] = Horse("black"), Horse("black")
 		self.board[7][1], self.board[7][6] = Horse("white"), Horse("white")
+
 		self.board[0][1].position, self.board[0][6].position  = [0, 1], [0, 6]
 		self.board[7][1].position, self.board[7][6].position  = [7, 1], [7, 6]
+
+		self.board[0][1].emblem, self.board[0][6].emblem = "♘", "♘"
+		self.board[7][1].emblem, self.board[7][6].emblem = "♞", "♞"
 
 		self.user_black.user_figures.append(self.board[0][1])
 		self.user_white.user_figures.append(self.board[7][1])
@@ -76,8 +90,12 @@ class Board:
 		# placing Towers
 		self.board[0][0], self.board[0][7] = Tower("black"), Tower("black")
 		self.board[7][0], self.board[7][7] = Tower("white"), Tower("white")
+
 		self.board[0][0].position, self.board[0][7].position  = [0, 0], [0, 7]
 		self.board[7][0].position, self.board[7][7].position  = [7, 0], [7, 7]
+
+		self.board[0][0].emblem, self.board[0][7].emblem = "♖", "♖"
+		self.board[7][0].emblem, self.board[7][7].emblem = "♜", "♜"
 
 		self.user_black.user_figures.append(self.board[0][0])
 		self.user_white.user_figures.append(self.board[7][0])
@@ -480,6 +498,62 @@ class Board:
 
 			break
 			
+	def white_board_print(self):
+
+		board_2  = [["■", "□", "■", "□", "■", "□", "■", "□"],
+					["□", "■", "□", "■", "□", "■", "□", "■"],
+					["■", "□", "■", "□", "■", "□", "■", "□"],
+					["□", "■", "□", "■", "□", "■", "□", "■"],
+					["■", "□", "■", "□", "■", "□", "■", "□"],
+					["□", "■", "□", "■", "□", "■", "□", "■"],
+					["■", "□", "■", "□", "■", "□", "■", "□"],
+					["□", "■", "□", "■", "□", "■", "□", "■"]]
 
 
+		for i in range(0, 8):
+			for b in range(0, 8):
+				if self.board[i][b] != None:
+					board_2[i][b] = self.board[i][b].emblem
 
+		count = 8
+
+		print()
+
+		for row in board_2:
+			print(str(count) + "|" , *row)
+			count -= 1
+
+		print("  ", "a", "b", "c", "d", "e", "f", "g", "h")
+			
+		print()
+
+
+	def black_board_print(self):
+
+		board_2  = [["■", "□", "■", "□", "■", "□", "■", "□"],
+					["□", "■", "□", "■", "□", "■", "□", "■"],
+					["■", "□", "■", "□", "■", "□", "■", "□"],
+					["□", "■", "□", "■", "□", "■", "□", "■"],
+					["■", "□", "■", "□", "■", "□", "■", "□"],
+					["□", "■", "□", "■", "□", "■", "□", "■"],
+					["■", "□", "■", "□", "■", "□", "■", "□"],
+					["□", "■", "□", "■", "□", "■", "□", "■"]]
+
+
+		for i in range(0, 8):
+			for b in range(0, 8):
+				if self.board[i][b] != None:
+					board_2[i][b] = self.board[i][b].emblem
+
+		count = 1
+
+		print()
+
+		for row in range(len(board_2) - 1, -1, -1):
+			print(str(count) + "|" , *board_2[row])
+			count += 1
+
+
+		print("  ", "h", "g", "f", "e", "d", "c", "b", "a")
+			
+		print()
