@@ -16,7 +16,7 @@ def configuration_create():
 	cursor = connection.cursor()
 
 	# creating table with user's creds
-	cursor.execute("CREATE TABLE IF NOT EXISTS user (nickname TEXT, password TEXT, win_score INTEGER, lose_score INTEGER)")
+	cursor.execute("CREATE TABLE IF NOT EXISTS user (nickname TEXT, password TEXT, email_address TEXT, win_score INTEGER, lose_score INTEGER)")
 
 	cursor.close()
 
@@ -25,10 +25,16 @@ def configuration_create():
 
 class User: 
 
-	def __init__(self, users_config):
+	def __init__(self, users_config, socket):
+		# saving socket attribute
+  		self.socket = socket
 
-		self.users_config = users_config
-		self.user_figures = []
+  		self.users_config = users_config
+
+  		self.user_figures = []
+
+  		self.communication = UserCommunication(self.socket)
+		
 
 
 	def registration(self):
@@ -39,13 +45,20 @@ class User:
 		# creating cursor
 		cursor = connection.cursor()
 
+		self.communication.send_msg("Please enter your nickname")
+
 		# user's nickname attribute
-		self.nickname = input("Please enter your nickname: ")
+		self.nickname = self.communication.receiving_msg()["msg"]
+
+		self.communication.send_msg("Please enter your password")
+
 		# user's client password attribute
-		self.password = input("Please enter your password: ")
+		self.password = self.communication.receiving_msg()["msg"]
+
+		self.communication.send_msg("Enter your email address to send you a password for registration")
 
 		# user's email address to send a password for registration
-		self.email_address = input("Enter your email address to send you a password for registration: ")
+		self.email_address = self.communication.receiving_msg()["msg"]
 
 		# hashing our client password
 		self.bytes_password = str.encode(self.password)
@@ -68,14 +81,16 @@ class User:
 
 			self.registration_code_sender(self.random)
 
-			self.user_code_input = str(input("Please enter the password here: "))
+			self.communication.send_msg(f"Mail sended to {self.email_address}. Please enter the password here")
+
+			self.user_code_input = str(self.communication.receiving_msg()["msg"])
 
 			if self.user_code_input == self.random:
 
-				params = (self.nickname, self.hex_dig, 0, 0)
+				params = (self.nickname, self.hex_dig, self.email_address, 0, 0)
 
 				# inserting values to db
-				cursor.execute("INSERT INTO user VALUES (?, ?, ?, ?)", params)
+				cursor.execute("INSERT INTO user VALUES (?, ?, ?, ?, ?)", params)
 
 				connection.commit()
 
@@ -91,12 +106,15 @@ class User:
 				break
 
 			else:
-				print("The password was wrong, We can send another password")
-				print("If you want new password, type `y` \n" \
-				 "if you wan't to cancel registration, enter `!exit!`")
+				
 
 				while True:
-					self.user_choice_input = input("Your choice: ")
+
+					self.communication.send_msg("The password was wrong, We can send another password \n" \
+					"1) If you want new password, type `y` \n" \
+					"2) if you wan't to cancel registration, enter `!exit!`")
+
+					self.user_choice_input = self.communication.receiving_msg()["msg"]
 
 					if self.user_choice_input == "!exit":
 
@@ -107,15 +125,15 @@ class User:
 						connection.close()
 
 						self.loop_status = False
-						print("Goodbye!")
+						self.communication.send_msg("Goodbye!")
 						break
 
 					elif self.user_choice_input == "y":
 						self.random = ""
 						break
 					else:
-						print("Please enter a valid choice")
-						self.user_choice_input = input("Your choice: ")
+						self.communication.send_msg("Please enter a valid choice")
+						self.user_choice_input = self.communication.receiving_msg()["msg"]
 
 
 	def login(self):
@@ -123,10 +141,15 @@ class User:
 		connection = sqlite3.connect(self.users_config)
 		cursor = connection.cursor()
 
+		self.communication.send_msg("Please enter your nickname")
+
 		# user's nickname attribute
-		self.nickname = input("Please enter your nickname: ")
+		self.nickname = self.communication.receiving_msg()["msg"]
+
+		self.communication.send_msg("Please enter your password")
+
 		# user's client password attribute
-		self.password = input("Please enter your password: ")
+		self.password = self.communication.receiving_msg()["msg"]
 
 		# hashing our client password
 		self.bytes_password = str.encode(self.password)
@@ -154,11 +177,17 @@ class User:
 
 					break
 				else:
-					print("Either your password or login are incorrect, please enter correct values")
+					self.communication.send_msg("Either your password or login are incorrect, please enter correct values. \n" \
+					"Please enter your nickname")
+
 					# user's nickname attribute
-					self.nickname = input("Please enter your nickname: ")
+					self.nickname = self.communication.receiving_msg()["msg"]
+
+					self.communication.send_msg("Please enter your password")
+
 					# user's client password attribute
-					self.password = input("Please enter your password: ")
+					self.password = self.communication.receiving_msg()["msg"]
+
 
 					# hashing our client password
 					self.bytes_password = str.encode(self.password)
@@ -167,11 +196,16 @@ class User:
 					# our client password hashed
 					self.hex_dig = self.hashed_password.hexdigest()
 			else:
-				print("Either your password or login are incorrect, please enter correct values")
+				self.communication.send_msg("Either your password or login are incorrect, please enter correct values. \n" \
+				"Please enter your nickname")
+					
 				# user's nickname attribute
-				self.nickname = input("Please enter your nickname: ")
+				self.nickname = self.communication.receiving_msg()["msg"]
+
+				self.communication.send_msg("Please enter your password")
+
 				# user's client password attribute
-				self.password = input("Please enter your password: ")
+				self.password = self.communication.receiving_msg()["msg"]
 
 				# hashing our client password
 				self.bytes_password = str.encode(self.password)
@@ -210,7 +244,7 @@ class User:
 		self.main_msg = self.msg.as_string()
 
 		self.server.sendmail("chessgameregistration@mail.ru", self.email_address, self.main_msg)
-		print(f"Mail sended to {self.email_address}")
+		
 
 		self.server.close()
 
@@ -231,13 +265,13 @@ class User:
 
 		# ask user if register or login 
 
-		print("Would You like to register or login? \n",
-			"if you want to register press `r` \n",
-			"if you want to login press `l` \n",
-			"If you want to close the programm type `!exit`")
+		self.communication.send_msg("Would You like to register or login? \n" \
+		"if you want to register press `r` \n" \
+		"if you want to login press `l` \n" \
+		"If you want to close the programm type `!exit`")
 
 		# user's choice
-		choice = str(input(": "))
+		choice = str(self.communication.receiving_msg()["msg"])
 
 		# loop for executing the login/register process,
 		# and in case if user write's wrong initial,
@@ -262,8 +296,8 @@ class User:
 				break
 
 			else:
-				print("Please enter valid choice: ")
-				choice = str(input())
+				self.communication.send_msg("Please enter valid choice: ")
+				choice = self.communication.receiving_msg()["msg"]
 
 
 	# user moving his figures from coordinates:
@@ -273,29 +307,29 @@ class User:
 
 		from_list = []
 
-		print("Which figure? (example=b2)")
+		self.communication.send_msg("Which figure? (example=b2)")
 
 		loop_status = True
 
 		secondary_status = True
 
-		choice = str(input(": "))
+		choice = str(self.communication.receiving_msg()["msg"])
 
 		while loop_status:
 
 		    if choice[1].isnumeric() and choice[0].isalpha() and choice[1] != 0:
 		        loop_status = False
 		    else:
-		        print("Please insert correct values, example: b2")
-		        choice = str(input(": "))
+		        self.communication.send_msg("Please insert correct values, example: b2")
+		        choice = str(self.communication.receiving_msg()["msg"])
 
 		while secondary_status:
 
 			if choice[0] in "abcdefgh" and 0 < int(choice[1]) < 9:
 				secondary_status = False
 			else:
-				print("Please insert correct coordinates")
-				choice = str(input(": "))
+				self.communication.send_msg("Please insert correct values, example: b2")
+				choice = str(self.communication.receiving_msg()["msg"])
 
 		# first position
 		from_list.append(8 - int(choice[1]))
@@ -316,29 +350,29 @@ class User:
 
 		to_list = []
 
-		print("Where to? (example=b2)")
+		self.communication.send_msg("Where to? (example=b2)")
 
 		loop_status = True
 
 		secondary_status = True
 
-		choice = str(input(": "))
+		choice = str(self.communication.receiving_msg()["msg"])
 
 		while loop_status:
 
 		    if choice[1].isnumeric() and choice[0].isalpha() and choice[1] != 0:
 		        loop_status = False
 		    else:
-		        print("Please insert correct values, example: b2")
-		        choice = str(input(": "))
+		        self.communication.send_msg("Please insert correct values, example: b2")
+		        choice = str(self.communication.receiving_msg()["msg"])
 
 		while secondary_status:
 
 			if choice[0] in "abcdefgh" and 0 < int(choice[1]) < 9:
 				secondary_status = False
 			else:
-				print("Please insert correct coordinates")
-				choice = str(input(": "))
+				self.communication.send_msg("Please insert correct values, example: b2")
+				choice = str(self.communication.receiving_msg()["msg"])
 
 		# first position
 		to_list.append(8 - int(choice[1]))
