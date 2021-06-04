@@ -20,10 +20,8 @@ def color_decision(first, second):
 	choice = random.choice(color)
 
 	if choice == "white":
-		print(f"{first.nickname} plays as white")
 		gameplay(first, second)
 	else:
-		print(f"{second.nickname} plays as white")
 		gameplay(second, first)
 
 
@@ -31,7 +29,7 @@ def gameplay(user_1, user_2):
 	global TURN
 
 
-	# first user plays as whites
+		# first user plays as whites
 	board = Board(user_1, user_2)
 	print(f"{user_1.nickname} 1 plays as white and {user_2.nickname} as black")
 	TURN = True
@@ -54,7 +52,7 @@ def gameplay(user_1, user_2):
 
 			print("user_1 turn")
 			# if player chooses wrong color figure
-			if board.board[white_move_from[0]][white_move_to[1]].figure_color != "white":
+			if board.board[white_move_from[0]][white_move_from[1]].figure_color != "white":
 				print("Please choose your figure, you play as whites")
 				white_move_from = user_1.user_move_from()
 
@@ -101,7 +99,7 @@ def gameplay(user_1, user_2):
 
 			# board figure move command
 			# checking if the direction is correct, else board tries to move with new parameters
-			elif board.board_move_figure(black_move_from , black_move_from ) != False:
+			elif board.board_move_figure(black_move_from , black_move_to) != False:
 
 				# checking if the soldier is on the last line of his way and needs replacement
 				board.soldier_replace(user_1)
@@ -168,6 +166,7 @@ def main():
 
 	client_socket, client_addr = server_socket.accept()
 	PLAYER2 = User("chess_users.db", client_socket)
+	PLAYER2.connect()
 	print(f"{PLAYER2.nickname} joined!")
 
 	color_decision(PLAYER1, PLAYER2)

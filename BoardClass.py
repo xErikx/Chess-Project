@@ -119,6 +119,9 @@ class Board:
 		# direction object to check all the cells in the current figures direction list
 		self.direction_check_list = None
 
+		# direction status to know if we need to return False or not
+		direction_status = True
+
 		
 		while True:
 
@@ -168,21 +171,32 @@ class Board:
 				# second status in case if there is a figure on the final destination
 				self.secondary_status = None
 
+				if self.move_index == 0:
+					self.move_index = 1
+				else:
+					pass
+
 				# checking the cells before the last move position
 				for cell in range(0, self.move_index):
 
 					main_cell = self.direction_check_list[cell]
 
-					# checking if all the cells before the final destination
-					# are empty, if so, move goes on
-					if self.board[main_cell[0]][main_cell[1]] == None and self.board[figure_to[0]][figure_to[1]] == None:
-						continue
+					# in case if there is no move further but from_to position, which is not empty
+					if self.move_index == 1 and self.board[figure_to[0]][figure_to[1]] != None:
+
+						self.secondary_status = True
+						break
 
 					# in case if all cells before the final are empty
 					# and the final destination cell is not empty(is another figure object)
 					elif self.board[main_cell[0]][main_cell[1]] == None and self.board[figure_to[0]][figure_to[1]] != None:
 
 						self.secondary_status = True
+						continue
+
+					# checking if all the cells before the final destination
+					# are empty, if so, move goes on
+					elif self.board[main_cell[0]][main_cell[1]] == None and self.board[figure_to[0]][figure_to[1]] == None:
 						continue
 
 					# this condition is for case, when there is a figure on a way to the last spot
@@ -192,6 +206,7 @@ class Board:
 						self.secondary_status  = False
 						
 						break
+
 
 				# if the loop returns True for cell status
 				# and all the way to the last cell is empty
@@ -211,7 +226,7 @@ class Board:
 					# possible moves nullify as we could pack them once more on the next move
 					self.board[figure_to[0]][figure_to[1]].positions_cleaning()
 
-				# 	
+				# in case if all the way is empty but there is a figure on the last cell
 				elif self.cell_status and self.secondary_status:
 
 					# checking figure_colors
@@ -247,10 +262,15 @@ class Board:
 			else:
 				print("Wrong direction, please enter a valid cell for move")
 
-				return False
+				direction_status = True
 				
 				break
 
+		# returning False if there is a need to repeat the move for player
+		if direction_status:
+			return False
+		else:
+			pass
 
 	# check function
 	def check(self, user):
