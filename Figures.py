@@ -1,6 +1,31 @@
 
 
 class Figure:
+	"""
+    A class used to represent Figure in chess game
+
+    Attributes
+    ----------
+    figure_color : str
+        figures color attribute
+    figure_status : bool
+        figures alive/eaten status attribute
+    emblem : str
+        figures emblem attribute
+    poss_moves: nested list
+    	figures possible moves list
+   	poss_attacks: nested list
+   		figures possible attacks list
+	position: list
+		figures position on board
+
+    Methods
+    -------
+    positions_cleaning:
+        cleaning the poss_moves and poss_attacks lists function
+    update_location:
+		figure position update function
+    """
 
 	def __init__(self, figure_color, figure_status=True, emblem=None):
 		self.figure_color = figure_color
@@ -30,10 +55,31 @@ class Figure:
 
 	
 class King(Figure):
+	"""
+    A class used to represent King in chess game
 
+    Attributes
+    ----------
+   	Same as in Figure class, as inheritance
+
+    Methods
+    -------
+    gen_possible_moves:
+        generating possible moves for figure
+    """
 
 	def gen_possible_moves(self):
+		"""
+	    gen_possible_moves:
+		
+		Function, generating possible moves for figure
+		possible moves are same as possible attacks
 
+	    Attributes:
+	    ----------
+	    poss_moves: possible moves for figure
+	    poss_attacks: possible attacks for figure
+    	"""
 		
 		# forward, backwards, left and right moving
 		for count in range(1, 2):
@@ -75,10 +121,31 @@ class King(Figure):
 
 
 class Queen(Figure):
+	"""
+    A class used to represent Queen in chess game
 
+    Attributes
+    ----------
+   	Same as in Figure class, as inheritance
 
+    Methods
+    -------
+    gen_possible_moves:
+        generating possible moves for figure
+    """
 
 	def gen_possible_moves(self):
+		"""
+	    gen_possible_moves:
+		
+		Function, generating possible moves for figure
+		possible moves are same as possible attacks
+
+	    Attributes:
+	    ----------
+	    poss_moves: possible moves for figure
+	    poss_attacks: possible attacks for figure
+    	"""
 
 		# forward, backwards, left and right moving
 		for count in range(1, 8):
@@ -115,9 +182,31 @@ class Queen(Figure):
 
 
 class Soldier(Figure):
+	"""
+    A class used to represent Soldier in chess game
+
+    Attributes
+    ----------
+   	Same as in Figure class, as inheritance
+
+    Methods
+    -------
+    gen_possible_moves:
+        generating possible moves for figure
+    """
 
 
 	def gen_possible_moves(self):
+		"""
+	    gen_possible_moves:
+		
+		Function, generating possible moves and possible attacks for figure
+
+	    Attributes:
+	    ----------
+	    poss_moves: possible moves for figure
+	    poss_attacks: possible attacks for figure
+    	"""
 
 		# generates moves, where soldier can only move forward if
 		# color is white, and backwards if it's black
@@ -149,9 +238,31 @@ class Soldier(Figure):
 
 
 class Tower(Figure):
+	"""
+    A class used to represent Tower in chess game
 
+    Attributes
+    ----------
+   	Same as in Figure class, as inheritance
+
+    Methods
+    -------
+    gen_possible_moves:
+        generating possible moves for figure
+    """
 
 	def gen_possible_moves(self):
+		"""
+	    gen_possible_moves:
+		
+		Function, generating possible moves for figure
+		possible moves are same as possible attacks
+
+	    Attributes:
+	    ----------
+	    poss_moves: possible moves for figure
+	    poss_attacks: possible attacks for figure
+    	"""
 
 		# forward, backwards, left and right moving
 		for count in range(1, 8):
@@ -174,9 +285,31 @@ class Tower(Figure):
 	
 
 class Horse(Figure):
+	"""
+    A class used to represent Horse in chess game
 
+    Attributes
+    ----------
+   	Same as in Figure class, as inheritance
+
+    Methods
+    -------
+    gen_possible_moves:
+        generating possible moves for figure
+    """
 
 	def gen_possible_moves(self):
+		"""
+	    gen_possible_moves:
+		
+		Function, generating possible moves for figure
+		possible moves are same as possible attacks
+
+	    Attributes:
+	    ----------
+	    poss_moves: possible moves for figure
+	    poss_attacks: possible attacks for figure
+    	"""
 
 		if self.position[0] + 2 < 8 and self.position[1] + 1 < 8: #1
 			self.poss_moves[0].append([self.position[0] + 2, self.position[1] + 1])
@@ -209,9 +342,31 @@ class Horse(Figure):
 
 
 class Bishop(Figure):
+	"""
+    A class used to represent Bishop in chess game
 
+    Attributes
+    ----------
+   	Same as in Figure class, as inheritance
+
+    Methods
+    -------
+    gen_possible_moves:
+        generating possible moves for figure
+    """
 
 	def gen_possible_moves(self):
+		"""
+	    gen_possible_moves:
+		
+		Function, generating possible moves for figure
+		possible moves are same as possible attacks
+
+	    Attributes:
+	    ----------
+	    poss_moves: possible moves for figure
+	    poss_attacks: possible attacks for figure
+    	"""
 
 		# diagonally left/right, up/down moves
 		for count in range(1, 8):

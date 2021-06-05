@@ -1,13 +1,38 @@
 from Figures import King, Queen, Soldier, Tower, Horse, Bishop
 
-class Board: 
+class Board:
+	"""
+    A class used to represent Board in chess game
+
+    Attributes
+    ----------
+    self.user_white: user attribute, who plays as whites
+    self.user_black: user attribute, who plays as blacks
+    self.board: main board as nested lists
+
+    Methods
+    -------
+    figures_placing: placing figures on board function
+    board_move_figure: moving the figure function
+    check: check function alarming when user's King is under attack
+    check_and_mate: check and mate function, deciding who won
+    soldier_replace: function replacing soldier when he reachs the first line of the opponent
+    """
 
 	def __init__(self, user_white, user_black):
+		"""
+        Parameters
+        ----------
+        self.user_white: user attribute, who plays as whites
+        self.user_black: user attribute, who plays as blacks
+
+        Attributes
+        ----------
+		self.board: main board as nested lists
+        """
 
 		self.user_white = user_white
-
 		self.user_black = user_black
-
 		self.board = [[None, None, None, None, None, None, None, None],
 					  [None, None, None, None, None, None, None, None],
 					  [None, None, None, None, None, None, None, None],
@@ -18,8 +43,17 @@ class Board:
 					  [None, None, None, None, None, None, None, None]]
 
 
-	# placing the figures on the board function
 	def figures_placing(self):
+		"""
+	    figures_placing:
+		
+	    Function, that places figures on board
+
+	    Attributes:
+	    ----------
+	    self.board: main board of the game
+    	"""
+
 		# placing soldiers
 		for figure in range(0, 8):
 			self.board[6][figure] = Soldier("white")
@@ -105,6 +139,20 @@ class Board:
 
 
 	def board_move_figure(self, figure_from, figure_to):
+		"""
+	    board_move_figure:
+		
+	    Function, that moves figures on board
+
+	    Args:
+	    figure_from: from where coordinates
+	    figure_to: where to coordinates
+
+	    Attributes:
+	    ----------
+	    self.figure_object: figure object, that user chose
+	    self.figure_object.position: figure object's position
+    	"""
 
 		# saving figure_from coordinate object as variable for easy use 
 		self.figure_object = self.board[figure_from[0]][figure_from[1]]
@@ -120,8 +168,10 @@ class Board:
 		self.direction_check_list = None
 
 		# direction status to know if we need to return False or not
-		direction_status = True
+		direction_status = False
 
+		# saving attack direction for further check
+		self.attack_direction = None
 		
 		while True:
 
@@ -131,7 +181,9 @@ class Board:
 			self.loop_must_break = False
 
 			# checking if the figures coordinates match with possible move cells for figure
-			for direction_list in self.figure_object.poss_moves:
+			for direction_list in self.figure_object.poss_moves + self.figure_object.poss_attacks:
+
+				self.status = False
 
 				# looking for exact direction of the move
 				for coordinates in direction_list:
@@ -146,18 +198,25 @@ class Board:
 						# stoping the loop
 						self.loop_must_break = True
 						break
-					else:
 
-						# returning False condition in status
-						self.status = False
-
-						# stoping the loop
-						self.loop_must_break = True
-						break
 				if self.loop_must_break:
 					break
 
-			
+			self.loop_must_break_2 = False
+
+			for direction_list in self.figure_object.poss_attacks:
+
+				for coordinates in direction_list:
+
+					if figure_to == coordinates:
+
+						self.attack_direction = direction_list
+
+						self.loop_must_break_2 = True
+
+				if self.loop_must_break_2:
+					break
+	
 
 			# if there is such cell in any direction 
 			if self.status:
@@ -210,7 +269,7 @@ class Board:
 
 				# if the loop returns True for cell status
 				# and all the way to the last cell is empty
-				if self.cell_status and self.secondary_status == None:
+				if self.cell_status and self.secondary_status == None and figure_to in self.direction_check_list:
 
 					# moving the figure
 					self.board[figure_to[0]][figure_to[1]] = self.board[figure_from[0]][figure_from[1]]
@@ -227,7 +286,7 @@ class Board:
 					self.board[figure_to[0]][figure_to[1]].positions_cleaning()
 
 				# in case if all the way is empty but there is a figure on the last cell
-				elif self.cell_status and self.secondary_status:
+				elif self.cell_status and self.secondary_status and figure_to in self.attack_direction:
 
 					# checking figure_colors
 					# if there is an opponent figure on a way, it's being eaten and the user's figure moves on
@@ -253,9 +312,12 @@ class Board:
 
 					else:
 						print("Invalid choice, your figure is on your way")
+						direction_status = True
+						
 
 				else:
 					print("Invalid choice, there is a figure on your way")
+					direction_status = True
 
 				break
 			# in case if we had False status and there is no such coordinates for figure to move to
@@ -274,6 +336,14 @@ class Board:
 
 	# check function
 	def check(self, user):
+		"""
+	    check:
+		
+	    check function, that alarms, when user's King is under attack
+
+	    Args:
+	    user: user arg to check his King
+    	"""
 
 		main_loop = False
 
@@ -321,8 +391,21 @@ class Board:
 
 
 
-	# check and mate function which defines the win
 	def check_and_mate(self, user_1, user_2):
+		"""
+	    check_and_mate:
+		
+	    Check and mate Function that defines who will win
+
+	    Args:
+	    user_1: user's arg who's King will be checked
+	    user_2: user's arg who's figures which can attack opponents King will be revealed
+
+	    Attributes:
+	    ----------
+	    self.king_object: User's King object
+	    self.figure_object.position: figure object's position
+    	"""
 
 		# users' king object 
 		self.king_object = None
@@ -427,6 +510,14 @@ class Board:
 
 
 	def soldier_replace(self, user):
+		"""
+	    soldier_replace:
+		
+	    Soldier replace Function that replaces soldier as it passes to the opponents first line on board
+
+	    Args:
+	    user: user's arg who's soldiers will be checked
+    	"""
 
 		trigger = True
 
@@ -519,6 +610,15 @@ class Board:
 			break
 			
 	def white_board_print(self):
+		"""
+	    white_board_print:
+		
+	   	Function that prints the board
+
+	    Attributes:
+	    board_2: board sample for printing
+    	"""
+
 
 		board_2  = [["■", "□", "■", "□", "■", "□", "■", "□"],
 					["□", "■", "□", "■", "□", "■", "□", "■"],
@@ -544,36 +644,5 @@ class Board:
 			count -= 1
 
 		print("  ", "a", "b", "c", "d", "e", "f", "g", "h")
-			
-		print()
-
-
-	def black_board_print(self):
-
-		board_2  = [["■", "□", "■", "□", "■", "□", "■", "□"],
-					["□", "■", "□", "■", "□", "■", "□", "■"],
-					["■", "□", "■", "□", "■", "□", "■", "□"],
-					["□", "■", "□", "■", "□", "■", "□", "■"],
-					["■", "□", "■", "□", "■", "□", "■", "□"],
-					["□", "■", "□", "■", "□", "■", "□", "■"],
-					["■", "□", "■", "□", "■", "□", "■", "□"],
-					["□", "■", "□", "■", "□", "■", "□", "■"]]
-
-
-		for i in range(0, 8):
-			for b in range(0, 8):
-				if self.board[i][b] != None:
-					board_2[i][b] = self.board[i][b].emblem
-
-		count = 1
-
-		print()
-
-		for row in range(len(board_2) - 1, -1, -1):
-			print(str(count) + "|" , *board_2[row])
-			count += 1
-
-
-		print("  ", "h", "g", "f", "e", "d", "c", "b", "a")
 			
 		print()

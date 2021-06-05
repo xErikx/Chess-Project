@@ -27,9 +27,7 @@ def color_decision(first, second):
 
 def gameplay(user_1, user_2):
 	global TURN
-
-
-		# first user plays as whites
+	# first user plays as whites
 	board = Board(user_1, user_2)
 	print(f"{user_1.nickname} 1 plays as white and {user_2.nickname} as black")
 	TURN = True
@@ -43,14 +41,24 @@ def gameplay(user_1, user_2):
 		if TURN == True:
 			
 			board.white_board_print()
-			board.black_board_print()
+			# board.black_board_print()
 
 			white_move_from = user_1.user_move_from()
 
 			white_move_to = user_1.user_move_to()
 
+			while True:
+				if board.board[white_move_from[0]][white_move_from[1]] == None:
+					print("Please enter a figure, not an empty cell")
 
-			print("user_1 turn")
+					white_move_from = user_1.user_move_from()
+
+					white_move_to = user_1.user_move_to()
+
+				else:
+					break
+
+
 			# if player chooses wrong color figure
 			if board.board[white_move_from[0]][white_move_from[1]].figure_color != "white":
 				print("Please choose your figure, you play as whites")
@@ -82,20 +90,31 @@ def gameplay(user_1, user_2):
 
 		else:
 
-			board.black_board_print()
 			board.white_board_print()
+			# board.black_board_print()
+			
 
 			black_move_from = user_2.user_move_from()
 
-			black_move_from  = user_2.user_move_to()
+			black_move_to  = user_2.user_move_to()
 
-			print("user_2 turn")
-			if board.board[black_move_from[0]][black_move_to[1]].figure_color != "black":
+			while True:
+				if board.board[black_move_from[0]][black_move_from[1]] == None:
+					print("Please enter a figure, not an empty cell")
+
+					black_move_from = user_2.user_move_from()
+
+					black_move_to  = user_2.user_move_to()
+					
+				else:
+					break
+
+			if board.board[black_move_from[0]][black_move_from[1]].figure_color != "black":
 				print("Please choose your figure, you play as blacks")
 
 				black_move_from = user_2.user_move_from()
 
-				black_move_from  = user_2.user_move_to()
+				black_move_to  = user_2.user_move_to()
 
 			# board figure move command
 			# checking if the direction is correct, else board tries to move with new parameters
@@ -117,20 +136,20 @@ def gameplay(user_1, user_2):
 
 			# in case if the move was wrong, we give another chance for player
 			else:
-				board.board_move_figure(user_2.user_move_from(), user_2.user_move_to())
+				board.board_move_figure(black_move_from , black_move_to)
 
 	# checking who lost and who won
 	else:
 		if board.check_and_mate(user_1, user_2) == False:
 			print(f"It's check and mate \n \
 				{user_2.nickname} won!")
-			user_2.win_score += 1
-			user_1.lose_score += 1
+			user_2.win_score_update()
+			user_1.lose_score_update()
 		else:
 			print(f"It's check and mate \n \
 				{user_2.nickname} won!")
-			user_1.win_score += 1
-			user_2.lose_score += 1
+			user_1.win_score_update()
+			user_2.lose_score_update()
 
 
 
@@ -162,6 +181,7 @@ def main():
 
 	PLAYER1 = User("chess_users.db", client_socket)
 	PLAYER1.connect()
+
 	print(f"{PLAYER1.nickname} joined!")
 
 	client_socket, client_addr = server_socket.accept()
